@@ -66,6 +66,28 @@ public class NormalLexer extends RegexLexer {
     }
 
     /**
+     * Returns true if this opening character sequence is neither null or
+     * empty.
+     *
+     * @return false if this lexer instance has required no opening
+     * characters
+     */
+    public final boolean hasOpening() {
+        return !StringUtils.isEmpty(getOpening());
+    }
+
+    /**
+     * Returns true if this closing character sequence is neither null or
+     * empty.
+     *
+     * @return false if this lexer instance has required no closing
+     * characters
+     */
+    public final boolean hasClosing() {
+        return !StringUtils.isEmpty(getClosing());
+    }
+
+    /**
      * Returns the leading character before a placeholder name.
      *
      * @return the leading character before entering a placeholder
@@ -86,7 +108,12 @@ public class NormalLexer extends RegexLexer {
     @Override
     protected String getValue(Language language, String raw) {
         final int n = StringUtils.length(raw);
-        if (n <= 1) return raw;
-        return raw.substring(1, n - 1);
+        int opn = StringUtils.length(opening);
+        int cls = StringUtils.length(closing);
+        if (n < opn + cls) {
+            //TODO warn or issue that the given value cannot exist?
+            return raw;
+        }
+        return raw.substring(opn, n - cls);
     }
 }

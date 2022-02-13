@@ -21,6 +21,7 @@ import java.util.List;
  * https://en.wikipedia.org/wiki/Lexical_analysis#Tokenization</a>
  * @since 1.0
  */
+@FunctionalInterface
 public interface MessageLexer {
 
     /**

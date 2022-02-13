@@ -117,4 +117,12 @@ public class MessageToken {
         this.type = type;
     }
 
+    @Override
+    public String toString() {
+        return "MessageToken{" +
+                "raw='" + raw + '\'' +
+                ", value='" + value + '\'' +
+                ", type=" + type +
+                '}';
+    }
 }

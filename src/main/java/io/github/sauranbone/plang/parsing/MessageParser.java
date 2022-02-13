@@ -16,6 +16,7 @@ import java.util.List;
  * https://en.wikipedia.org/wiki/Parsing#Parser</a>
  * @since 1.0
  */
+@FunctionalInterface
 public interface MessageParser {
 
     /**

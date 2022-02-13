@@ -59,7 +59,7 @@ public final class Lexicon extends AbstractPlangMap<String, Placeholder<?>> {
      * they are case sensitive.
      *
      * @return false if mapped placeholders are not case sensitive and
-     * their binding names are made lowercase
+     * their binding names are made lowercase (default: false)
      */
     public boolean isCaseSensitive() {
         return caseSensitive;

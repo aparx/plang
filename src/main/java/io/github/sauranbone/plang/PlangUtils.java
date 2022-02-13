@@ -34,15 +34,28 @@ public class PlangUtils {
         if (StringUtils.isEmpty(str))
             return StringUtils.EMPTY;
         final int n = str.length();
+        final char escp = '\\';
+        if (n == 1) {
+            //Fastpath regex escaping for single character
+            final char cp = str.charAt(0);
+            return (isSpecialRegexCharacter(cp)
+                    ? String.valueOf(escp) : StringUtils.EMPTY)
+                    + cp;
+        }
         StringBuilder builder = new StringBuilder(n);
         for (int i = 0; i < n; i++) {
             char ch = str.charAt(i);
-            if (REGEX_SPECIAL_CHARACTERS.indexOf(ch) != -1) {
-                builder.append('\\');
+            if (isSpecialRegexCharacter(ch)) {
+                //Append escaping to this character
+                builder.append(escp);
             }
             builder.append(ch);
         }
         return builder.toString();
+    }
+
+    public static boolean isSpecialRegexCharacter(char ch) {
+        return REGEX_SPECIAL_CHARACTERS.indexOf(ch) != -1;
     }
 
 

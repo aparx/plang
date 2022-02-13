@@ -1,5 +1,6 @@
 package io.github.sauranbone.plang.parsing.impl;
 
+import io.github.sauranbone.plang.PlangUtils;
 import io.github.sauranbone.plang.specific.Language;
 import org.apache.commons.lang3.StringUtils;
 
@@ -47,22 +48,11 @@ public class NormalLexer extends RegexLexer {
      * @see NormalLexer
      */
     public NormalLexer(String opening, String closing) {
-        super(Pattern.compile(escape(opening) + ".+" + escape(closing)));
+        super(Pattern.compile(PlangUtils.escapeRegex(opening)
+                + "[.[^" + nullcheck(opening) + nullcheck(closing) + "]]+"
+                + PlangUtils.escapeRegex(closing)));
         this.opening = opening;
         this.closing = closing;
-    }
-
-    /**
-     * Escapes the given {@code str} using regex quoting if possible.
-     * <p>If {@code str} is null or empty, an empty string is returned.
-     *
-     * @param str the target string to be escaped
-     * @return the escaped string
-     */
-    protected static String escape(String str) {
-        return StringUtils.isEmpty(str)
-                ? StringUtils.EMPTY
-                : Pattern.quote(str);
     }
 
     /**
@@ -72,8 +62,8 @@ public class NormalLexer extends RegexLexer {
      * @return false if this lexer instance has required no opening
      * characters
      */
-    public final boolean hasOpening() {
-        return !StringUtils.isEmpty(getOpening());
+    public boolean hasOpening() {
+        return !StringUtils.isEmpty(opening);
     }
 
     /**
@@ -83,25 +73,27 @@ public class NormalLexer extends RegexLexer {
      * @return false if this lexer instance has required no closing
      * characters
      */
-    public final boolean hasClosing() {
-        return !StringUtils.isEmpty(getClosing());
+    public boolean hasClosing() {
+        return !StringUtils.isEmpty(closing);
     }
 
     /**
      * Returns the leading character before a placeholder name.
      *
-     * @return the leading character before entering a placeholder
+     * @return the leading character before entering a placeholder, {@code
+     * nullable}
      */
-    public final String getOpening() {
+    public String getOpening() {
         return opening;
     }
 
     /**
      * Returns the closing characters after a placeholder name.
      *
-     * @return the tailing characters after entering a placeholder
+     * @return the tailing characters after entering a placeholder, {@code
+     * nullable}
      */
-    public final String getClosing() {
+    public String getClosing() {
         return closing;
     }
 
@@ -115,5 +107,9 @@ public class NormalLexer extends RegexLexer {
             return raw;
         }
         return raw.substring(opn, n - cls);
+    }
+
+    private static String nullcheck(String str) {
+        return str == null ? StringUtils.EMPTY : str;
     }
 }

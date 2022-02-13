@@ -1,5 +1,7 @@
 package io.github.sauranbone.plang.parsing;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -41,6 +43,37 @@ public class ParsedTokens implements Iterable<MessageToken> {
     private ParsedTokens(ArrayList<MessageToken> reference) {
         Objects.requireNonNull(reference);
         this.tokens = reference;
+    }
+
+    /**
+     * Returns a string that concatenates all given {@code tokens} and
+     * their raw content with each other.
+     *
+     * @param tokens the target tokens to be formatted into a string
+     * @return the string out of {@code tokens}
+     */
+    public static String tokensToString(ParsedTokens tokens) {
+        return tokensToString(tokens == null ? null : tokens.tokens);
+    }
+
+    /**
+     * Returns a string that concatenates all given {@code tokens} and
+     * their raw content with each other.
+     *
+     * @param tokens the target tokens to be formatted into a string
+     * @return the string out of {@code tokens}
+     */
+    public static String tokensToString(List<MessageToken> tokens) {
+        if (tokens == null) return "null";
+        if (tokens.isEmpty())
+            return StringUtils.EMPTY;
+        StringBuilder builder = new StringBuilder();
+        for (int n = tokens.size(), i = 0; i < n; i++) {
+            MessageToken token = tokens.get(i);
+            builder.append(token == null ?
+                    "null" : token.getRaw());
+        }
+        return builder.toString();
     }
 
     /**
@@ -88,6 +121,11 @@ public class ParsedTokens implements Iterable<MessageToken> {
         return tokens.iterator();
     }
 
+    @Override
+    public String toString() {
+        return tokens.toString();
+    }
+
     /**
      * Thread-safe parsed token list builder that allows mutations to
      * happen before the instance is created.
@@ -100,7 +138,16 @@ public class ParsedTokens implements Iterable<MessageToken> {
          * Allocates a new parsed token list builder.
          */
         public Builder() {
-            ref = new ArrayList<>();
+            this(0);
+        }
+
+        /**
+         * Allocates a new parsed token list builder.
+         *
+         * @param initialCapacity the initial capacity of the list
+         */
+        public Builder(int initialCapacity) {
+            ref = new ArrayList<>(initialCapacity);
         }
 
         /**
@@ -141,6 +188,14 @@ public class ParsedTokens implements Iterable<MessageToken> {
             return this;
         }
 
+        /**
+         * Returns this mutable reference list object.
+         *
+         * @return this list reference
+         */
+        public ArrayList<MessageToken> getReference() {
+            return ref;
+        }
     }
 
 }

@@ -1,7 +1,14 @@
-import io.github.sauranbone.plang.parsing.MessageLexer;
+import io.github.sauranbone.plang.PlangUtils;
 import io.github.sauranbone.plang.parsing.impl.NormalLexer;
 import io.github.sauranbone.plang.parsing.impl.NormalParser;
+import io.github.sauranbone.plang.placeholder.Placeholder;
 import io.github.sauranbone.plang.specific.Language;
+import io.github.sauranbone.plang.specific.Lexicon;
+import org.apache.commons.lang3.RegExUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Vinzent Zeband
@@ -11,10 +18,12 @@ import io.github.sauranbone.plang.specific.Language;
 public class AppletTest {
 
     public static void main(String[] args) {
-        Language language = new Language("english", "en",
+        Lexicon lexicon = new Lexicon();
+        lexicon.set(Placeholder.of("player", "danishGunner"));
+        lexicon.set(Placeholder.of("world", "world!"));
+        Language language = new Language("english", "en", lexicon,
                 NormalLexer.DEFAULT_LEXER, new NormalParser());
-        MessageLexer lexer = language.getLexer();
-        System.out.println(lexer.tokenize(language, "Hello {world} how are you"));
+        System.out.println(NormalLexer.DEFAULT_LEXER.tokenize(language, "Hello {player} how are you {xx}"));
 
 //        Lexicon lexicon = new Lexicon();
 //        lexicon.set(Placeholder.of("test", "asd"));

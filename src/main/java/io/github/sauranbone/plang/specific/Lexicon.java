@@ -66,6 +66,20 @@ public final class Lexicon extends AbstractPlangMap<String, Placeholder<?>> {
     }
 
     /**
+     * Returns true if a placeholder with given {@code key} is concurrently
+     * bound.
+     *
+     * @param key the target placeholder name to check, {@code not null}
+     * @return false if there is no placeholder having given {@code key} as
+     * its names
+     * @throws NullPointerException if {@code key} is null
+     */
+    public synchronized boolean has(String key) {
+        Objects.requireNonNull(key);
+        return super.containsKey(key);
+    }
+
+    /**
      * Binds the given {@code placeholder} to it's name into this lexicon.
      *
      * @param placeholder the placeholder to be bind

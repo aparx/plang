@@ -1,4 +1,4 @@
-package io.github.sauranbone.plang.lang;
+package io.github.sauranbone.plang.placeholder;
 
 /**
  * Class containing constants and utilities to modify and change a bitmask

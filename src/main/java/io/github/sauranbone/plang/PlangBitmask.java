@@ -36,8 +36,8 @@ public interface PlangBitmask {
      * {@code status} is true, otherwise removes it.
      *
      * @param modifier the modifier to be updated
-     * @param status   the target status of the {@code modifier}, true
-     *                 is equivalent to enabled while false is disabled
+     * @param status   the target status of the {@code modifier}, true is
+     *                 equivalent to enabled while false is disabled
      * @see #getModifiers()
      * @see #setModifiers(int)
      */

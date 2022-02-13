@@ -1,4 +1,4 @@
-package io.github.sauranbone.plang.lang;
+package io.github.sauranbone.plang.specific;
 
 import io.github.sauranbone.plang.parsing.MessageLexer;
 import io.github.sauranbone.plang.parsing.MessageParser;

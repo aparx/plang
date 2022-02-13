@@ -1,29 +1,30 @@
-package io.github.sauranbone.plang.lang;
+package io.github.sauranbone.plang.placeholder;
 
 import io.github.sauranbone.plang.PlangBitmask;
-import org.apache.commons.lang3.Validate;
 
-import static io.github.sauranbone.plang.lang.PlaceholderModifier.*;
+import static io.github.sauranbone.plang.placeholder.PlaceholderModifier.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 /**
- * Placeholder class containing methods to transform incoming data and translating
- * it to a resulting and displayable value.
- * <p>A placeholder is essentially like a dynamic variable that can be used in literal
- * text to point to a placeholder instance (like this) using a specified syntax for it.
- * The literal placeholder will then be replaced by the content of the pointed
- * placeholder, thus resulting into a replacement of a certain signature that triggers
- * the placeholder that is replaced by the content of the pointed placeholder instance.
+ * Placeholder class containing methods to transform incoming data and
+ * translating it to a resulting and displayable value.
+ * <p>A placeholder is essentially like a dynamic variable that can be
+ * used in literal text to point to a placeholder instance (like this)
+ * using a specified syntax for it.  The literal placeholder will then be
+ * replaced by the content of the pointed placeholder, thus resulting into
+ * a replacement of a certain signature that triggers the placeholder that
+ * is replaced by the content of the pointed placeholder instance.
  * <p>An example for the described above would be this:
  * <pre><code>
  *     String s = "Hello {playerName}";
  * </code></pre>
- * Whereas "{playerName}" is pointing to a placeholder named "playerName", which then
- * can be invoked and the string replaced using various methods.  The syntax in the given
- * example is relatively easy, as it only requires curly brackets to surround the target
- * literal placeholder in order to point to an actual placeholder object in memory.
+ * Whereas "{playerName}" is pointing to a placeholder named "playerName",
+ * which then can be invoked and the string replaced using various methods.
+ * The syntax in the given example is relatively easy, as it only requires
+ * curly brackets to surround the target literal placeholder in order to
+ * point to an actual placeholder object in memory.
  *
  * @author Vinzent Zeband
  * @version 23:34 CET, 12.02.2022
@@ -40,12 +41,12 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
     private final Class<T> target;
 
     /**
-     * Allocates a new super message placeholder with the given {@code name}
-     * as the callable name of the placeholder.
+     * Allocates a new super message placeholder with the given {@code
+     * name} as the callable name of the placeholder.
      *
      * @param name   the callable name of this placeholder
-     * @param target the target class type of this placeholder,
-     *               null for any type
+     * @param target the target class type of this placeholder, null for
+     *               any type
      * @throws NullPointerException if {@code name} is null
      */
     protected Placeholder(String name, Class<T> target) {
@@ -55,12 +56,12 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
     }
 
     /**
-     * Allocates a new message placeholder with given callable {@code name} and
-     * a static value transformer returning {@code object}.
+     * Allocates a new message placeholder with given callable {@code name}
+     * and a static value transformer returning {@code object}.
      *
      * @param name   the target name of the placeholder
-     * @param object the target value that is returned whenever this {@code transform}
-     *               method is called
+     * @param object the target value that is returned whenever this {@code
+     *               transform} method is called
      * @param <T>    the target type of the placeholder
      * @return the newly allocated placeholder instance
      * @throws NullPointerException if {@code name} is null
@@ -72,13 +73,14 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
     }
 
     /**
-     * Allocates a new message placeholder with given callable {@code name} and
-     * {@code transformer}, which accepts receiving data and transforms it into
-     * literal content that can be any object.
+     * Allocates a new message placeholder with given callable {@code name}
+     * and {@code transformer}, which accepts receiving data and transforms
+     * it into literal content that can be any object.
      *
      * @param name        the target name of the placeholder
      * @param transformer the target transformer of the placeholder
-     * @param type        the target data type that is {@code transformer} accepts
+     * @param type        the target data type that is {@code transformer}
+     *                    accepts
      * @param <T>         the target type of the placeholder
      * @return the newly allocated placeholder instance
      * @throws NullPointerException if any argument is null
@@ -90,9 +92,9 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
     }
 
     /**
-     * Returns the callable name of this placeholder, that can be used in literal
-     * text to point to this placeholder in order to be replaced using this and
-     * the processors transformative utilities.
+     * Returns the callable name of this placeholder, that can be used in
+     * literal text to point to this placeholder in order to be replaced
+     * using this and the processors transformative utilities.
      *
      * @return the callable name of this placeholder
      */
@@ -101,7 +103,8 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
     }
 
     /**
-     * Returns true if this placeholder has a target class and is not static.
+     * Returns true if this placeholder has a target class and is not
+     * static.
      *
      * @return false if this placeholder is static
      * @see #getAcceptingType()
@@ -113,8 +116,8 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
     }
 
     /**
-     * Returns the nullable target class type that this placeholder can accept
-     * using this transformative method.
+     * Returns the nullable target class type that this placeholder can
+     * accept using this transformative method.
      *
      * @return the target class type, {@code nullable}
      */
@@ -146,8 +149,9 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
     }
 
     /**
-     * Returns the modifiers bitmask that contains information about this placeholder,
-     * and how the placeholder should be handled in processors.
+     * Returns the modifiers bitmask that contains information about this
+     * placeholder, and how the placeholder should be handled in
+     * processors.
      *
      * @return this placeholder's descriptive modifiers
      * @see PlaceholderModifier
@@ -170,12 +174,13 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
 
     /**
      * {@inheritDoc}
-     * <p>The target {@code modifier} must be from any static accessible constant
-     * declared in {@link PlaceholderModifier}, otherwise fatal errors can occur.
+     * <p>The target {@code modifier} must be from any static accessible
+     * constant declared in {@link PlaceholderModifier}, otherwise fatal
+     * errors can occur.
      *
      * @param modifier the modifier to be updated
-     * @param status   the target status of the {@code modifier}, true
-     *                 is equivalent to enabled while false is disabled
+     * @param status   the target status of the {@code modifier}, true is
+     *                 equivalent to enabled while false is disabled
      * @see #setModifiers(int)
      * @see PlaceholderModifier
      */
@@ -186,8 +191,9 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
 
     /**
      * {@inheritDoc}
-     * <p>The target {@code modifier} must be from any static accessible constant
-     * declared in {@link PlaceholderModifier}, otherwise fatal errors can occur.
+     * <p>The target {@code modifier} must be from any static accessible
+     * constant declared in {@link PlaceholderModifier}, otherwise fatal
+     * errors can occur.
      *
      * @param modifier the target modifier
      * @see #setModifiers(int)
@@ -200,8 +206,9 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
 
     /**
      * {@inheritDoc}
-     * <p>The target {@code modifier} must be from any static accessible constant
-     * declared in {@link PlaceholderModifier}, otherwise fatal errors can occur.
+     * <p>The target {@code modifier} must be from any static accessible
+     * constant declared in {@link PlaceholderModifier}, otherwise fatal
+     * errors can occur.
      *
      * @param modifier the target modifier
      * @see #setModifiers(int)
@@ -212,7 +219,9 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
         PlangBitmask.super.disable(modifier);
     }
 
-    private static <T> Placeholder<T> createInstance(final String name, final Transformer<T> transformer, Class<T> type) {
+    private static <T> Placeholder<T> createInstance(final String name,
+                                                     final Transformer<T> transformer,
+                                                     Class<T> type) {
         Objects.requireNonNull(transformer);
         return new Placeholder<T>(name, type) {
             @Override

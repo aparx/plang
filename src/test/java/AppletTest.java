@@ -1,6 +1,9 @@
-import io.github.sauranbone.plang.lang.Placeholder;
+import com.sun.xml.internal.ws.assembler.MetroTubelineAssembler;
+import io.github.sauranbone.plang.parsing.ParsedTokens;
+import io.github.sauranbone.plang.specific.Lexicon;
+import io.github.sauranbone.plang.placeholder.Placeholder;
 import io.github.sauranbone.plang.parsing.MessageToken;
-import io.github.sauranbone.plang.parsing.TokenType;
+import io.github.sauranbone.plang.parsing.MessageTokenType;
 
 /**
  * @author Vinzent Zeband
@@ -10,7 +13,16 @@ import io.github.sauranbone.plang.parsing.TokenType;
 public class AppletTest {
 
     public static void main(String[] args) {
-        MessageToken token = new MessageToken("test", "test", TokenType.LITERAL);
+        Lexicon lexicon = new Lexicon();
+
+        lexicon.set(Placeholder.of("test", "asd"));
+        lexicon.get("test");
+        lexicon.clear();
+        ParsedTokens.Builder builder = new ParsedTokens.Builder();
+        builder.add(new MessageToken("hi", null, MessageTokenType.LITERAL))
+                .build().get(2);
+
+        MessageToken token = new MessageToken("test", "test", MessageTokenType.LITERAL);
         Placeholder<?> ph = Placeholder.of("test", s -> "test", String.class);
     }
 

@@ -1,9 +1,11 @@
+import com.sun.org.apache.xml.internal.security.algorithms.MessageDigestAlgorithm;
 import io.github.sauranbone.plang.PlangUtils;
 import io.github.sauranbone.plang.parsing.impl.NormalLexer;
 import io.github.sauranbone.plang.parsing.impl.NormalParser;
 import io.github.sauranbone.plang.placeholder.Placeholder;
 import io.github.sauranbone.plang.specific.Language;
 import io.github.sauranbone.plang.specific.Lexicon;
+import io.github.sauranbone.plang.specific.Message;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -23,7 +25,8 @@ public class AppletTest {
         lexicon.set(Placeholder.of("world", "world!"));
         Language language = new Language("english", "en", lexicon,
                 NormalLexer.DEFAULT_LEXER, new NormalParser());
-        System.out.println(NormalLexer.DEFAULT_LEXER.tokenize(language, "Hello {player} how are you {xx}"));
+        Message message = new Message("test", language);
+        System.out.println(message.getTokens());
 
 //        Lexicon lexicon = new Lexicon();
 //        lexicon.set(Placeholder.of("test", "asd"));

@@ -18,6 +18,24 @@ public class PlangUtils {
      */
     public static final String REGEX_SPECIAL_CHARACTERS = "<([{\\^-=$!|]})?*+.>";
 
+    private static final String ESCAPE_STRING = "\\";
+
+    /**
+     * Escapes the given {@code cp} if that is one of regular expression
+     * special characters and returns the mutated and regex escaped
+     * string.
+     * <p>If {@code str} is null or empty, an empty string is returned.
+     *
+     * @param cp the character to be escaped, if required
+     * @return the escaped string
+     * @apiNote Alternative to {@link Pattern#quote(String)}.
+     * @see #REGEX_SPECIAL_CHARACTERS
+     */
+    public static String escapeRegex(char cp) {
+        return (isSpecialRegexCharacter(cp)
+                ? ESCAPE_STRING : StringUtils.EMPTY)
+                + cp;
+    }
 
     /**
      * Escapes every character in {@code str} that is one of regular
@@ -37,10 +55,7 @@ public class PlangUtils {
         final char escp = '\\';
         if (n == 1) {
             //Fastpath regex escaping for single character
-            final char cp = str.charAt(0);
-            return (isSpecialRegexCharacter(cp)
-                    ? String.valueOf(escp) : StringUtils.EMPTY)
-                    + cp;
+            return escapeRegex(str.charAt(0));
         }
         StringBuilder builder = new StringBuilder(n);
         for (int i = 0; i < n; i++) {
@@ -54,9 +69,19 @@ public class PlangUtils {
         return builder.toString();
     }
 
+    /**
+     * Returns true if {@code ch} is one of the regular expressions special
+     * characters that are defined in this constant.
+     *
+     * @param ch the character to test
+     * @return false if {@code ch} is not a special character that can be
+     * escaped
+     * @see #REGEX_SPECIAL_CHARACTERS
+     */
     public static boolean isSpecialRegexCharacter(char ch) {
+        if (ch < 21 || ch > 0x7d)
+            return false;
         return REGEX_SPECIAL_CHARACTERS.indexOf(ch) != -1;
     }
-
 
 }

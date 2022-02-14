@@ -1,6 +1,7 @@
 package io.github.sauranbone.plang.map;
 
 import io.github.sauranbone.plang.PlangUtils;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.*;
 
@@ -14,24 +15,30 @@ import java.util.*;
  */
 public class DataBindMap extends AbstractPlangMap<Object, Object> implements DataBinder {
 
+    transient public static final boolean DEFAULT_CASE_SENSITIVITY = false;
+
+    //Highest and second-highest index inserted
+    private int high = -1, midst = -1;
+
     final boolean caseSensitive;
 
     /**
      * Allocates a new binding map with no initial values that is
      * case-insensitive.
-     * <p>Case-sensitivity is automatically disabled using this
-     * {@link #DataBindMap(boolean)}.
+     * <p>Case-sensitivity is automatically set to this
+     * {@link #DEFAULT_CASE_SENSITIVITY} using
+     * {@link #DataBindMap(Map, boolean)}.
      *
      * @see #DataBindMap(boolean)
      * @see #isCaseSensitive()
      */
     public DataBindMap() {
-        this(false);
+        this(DEFAULT_CASE_SENSITIVITY);
     }
 
     /**
-     * Allocates a new binding map that is having {@code caseSensitive}
-     * as the primary configuration attribute and no initial values.
+     * Allocates a new binding map that is having {@code caseSensitive} as
+     * the primary configuration attribute and no initial values.
      * <p>If {@code caseSensitive} is false, object keys that are bound
      * using string class type are made lowercase in order to provide a
      * case-insensitivity.
@@ -45,21 +52,23 @@ public class DataBindMap extends AbstractPlangMap<Object, Object> implements Dat
 
     /**
      * Allocates a new binding map using given {@code initialCapacity}.
-     * <p>Case-sensitivity is automatically disabled using this
-     * {@link #DataBindMap(int, boolean)}.
+     * <p>Case-sensitivity is automatically set to this
+     * {@link #DEFAULT_CASE_SENSITIVITY} using
+     * {@link #DataBindMap(Map, boolean)}.
      *
      * @param initialCapacity the target initial capacity of this map
      * @see #DataBindMap(int, boolean)
      * @see #isCaseSensitive()
      */
     public DataBindMap(int initialCapacity) {
-        this(initialCapacity, false);
+        this(initialCapacity, DEFAULT_CASE_SENSITIVITY);
     }
 
     /**
      * Allocates a new binding map using given {@code map} as initial
      * values, which are copied over to this map reference.
-     * <p>Case-sensitivity is automatically disabled using this
+     * <p>Case-sensitivity is automatically set to this
+     * {@link #DEFAULT_CASE_SENSITIVITY} using
      * {@link #DataBindMap(Map, boolean)}.
      *
      * @param map the target initial values copied into this map
@@ -67,7 +76,7 @@ public class DataBindMap extends AbstractPlangMap<Object, Object> implements Dat
      * @see #isCaseSensitive()
      */
     public DataBindMap(Map<Object, Object> map) {
-        this(map, false);
+        this(map, DEFAULT_CASE_SENSITIVITY);
     }
 
     /**
@@ -99,6 +108,29 @@ public class DataBindMap extends AbstractPlangMap<Object, Object> implements Dat
     public DataBindMap(Map<Object, Object> map, boolean caseSensitive) {
         super(map);
         this.caseSensitive = caseSensitive;
+        evalall();
+    }
+
+    /**
+     * Allocates a new binding map having every element within
+     * {@code array} bound to their corresponding index.
+     *
+     * @param array the target values to be pushed to the final map
+     * @apiNote There is yet no default case sensitivity array version of
+     * this allocation triggering method as the unpacking of an array might
+     * cause problems whenever the first array element is a boolean,
+     * because of the method being overloaded with this parameter types
+     * even tho different were meant (only array was meant, not the boolean
+     * and array).  This might change in future versions depending on the
+     * request for it.
+     * @see #DataBindMap(int, boolean)
+     * @see #push(Object...)
+     */
+    public static DataBindMap index(boolean caseSensitive, Object... array) {
+        int length = ArrayUtils.getLength(array);
+        DataBindMap map = new DataBindMap(length, caseSensitive);
+        map.push(array);    //Finally, push the actual values
+        return map;         //Simply return the polished map
     }
 
     @Override
@@ -108,12 +140,29 @@ public class DataBindMap extends AbstractPlangMap<Object, Object> implements Dat
 
     @Override
     public void bindToObjectKey(Object key, Object value) {
-        super.set(computeKey(key), value);
+        Object obj = computeKey(key);
+        if (obj instanceof Integer) {
+            evalidx((int) obj, true);
+        }
+        super.set(obj, value);
+    }
+
+    private int getNumber(Object v) {
+        return v instanceof Number ? ((Number) v).intValue() : -1;
+    }
+
+    @Override
+    public void push(Object... values) {
+        arraypush(values, 1 + high);
     }
 
     @Override
     public boolean unbind(Object key) {
-        return super.remove(computeKey(key)) != null;
+        Object obj = computeKey(key);
+        if (!isBound(obj)) return false;
+        evalidx((int) obj, false);
+        super.remove(obj);
+        return true;
     }
 
     @Override
@@ -134,9 +183,14 @@ public class DataBindMap extends AbstractPlangMap<Object, Object> implements Dat
         } else if (key instanceof Number) {
             return checkIndex(((Number) key).intValue());
         } else if (key instanceof Class) {
-            return PlangUtils.getContravariant((Class<?>) key);
+            return PlangUtils.getTopSuperclass((Class<?>) key);
         }
         return key;
+    }
+
+    @Override
+    public int getHighestIndex() {
+        return high;
     }
 
     @Override
@@ -176,9 +230,43 @@ public class DataBindMap extends AbstractPlangMap<Object, Object> implements Dat
 
     private int checkIndex(int intValue) {
         if (intValue < 0)
-            throw new IndexOutOfBoundsException
-                    (String.valueOf(intValue));
+            throw new IndexOutOfBoundsException(String.valueOf(intValue));
         return intValue;
+    }
+
+    private void arraypush(Object[] array, int offset) {
+        if (ArrayUtils.isEmpty(array)) return;
+        offset = Math.max(offset, 0);
+        for (int i = 0; i < array.length; i++) {
+            //Bind the array value at index
+            this.bind(offset + i, array[i]);
+        }
+    }
+
+    private void evalidx(int i, boolean put) {
+        if (i == Integer.MAX_VALUE) {
+            throw new IndexOutOfBoundsException("Index has reached " + "MAX_VALUE and thus is illegal");
+        }
+        if (i > high) {
+            if (put) high = i;
+            else high = midst;
+        } else if (i > midst) {
+            if (put) i = midst;
+            else synchronized (this) {
+                //Re-evaluate every entry
+                high = -1;
+                midst = -1;
+                evalall();
+            }
+        }
+    }
+
+    private void evalall() {
+        for (Map.Entry<Object, Object> obj : entries()) {
+            Object v = obj.getValue();
+            if (v == null) continue;
+            evalidx(getNumber(v), true);
+        }
     }
 
 }

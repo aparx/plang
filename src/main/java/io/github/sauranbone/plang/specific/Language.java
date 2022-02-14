@@ -1,10 +1,7 @@
 package io.github.sauranbone.plang.specific;
 
 import com.sun.istack.internal.localization.Localizer;
-import io.github.sauranbone.plang.parsing.MessageLexer;
-import io.github.sauranbone.plang.parsing.MessageParser;
-import io.github.sauranbone.plang.parsing.MessageToken;
-import io.github.sauranbone.plang.parsing.ParsedTokens;
+import io.github.sauranbone.plang.parsing.*;
 
 import java.io.Serializable;
 import java.util.List;
@@ -20,34 +17,40 @@ import java.util.Objects;
  */
 public class Language implements Serializable {
 
-    final String name, abbreviation;
-    final Lexicon lexicon;
-    final MessageLexer lexer;
-    final MessageParser parser;
+    private final String name, abbreviation;
+    private final Lexicon lexicon;
+    private final MessageLexer lexer;
+    private final MessageParser parser;
+    private final MessageTransformer transformer;
 
     /**
-     * Allocates a new language having an entire {@code name}, an {@code
-     * abbreviation} and further more constant attributes and processors.
+     * Allocates a new language having an entire {@code name}, an
+     * {@code abbreviation} and further more constant attributes and
+     * processors.
      *
      * @param name         the target full name of this language
      * @param abbreviation this language's abbreviation
      * @param lexicon      the lexicon that is used
      * @param lexer        the target lexer that is used
      * @param parser       the target parser that is used
+     * @param transformer  the target message transforming utility
      * @throws NullPointerException if any argument is null
      */
     public Language(String name, String abbreviation, Lexicon lexicon,
-                    MessageLexer lexer, MessageParser parser) {
-        Objects.requireNonNull(name);
-        Objects.requireNonNull(abbreviation);
-        Objects.requireNonNull(lexicon);
-        Objects.requireNonNull(lexer);
-        Objects.requireNonNull(parser);
+                    MessageLexer lexer, MessageParser parser,
+                    MessageTransformer transformer) {
+        Objects.requireNonNull(name, "Name");
+        Objects.requireNonNull(abbreviation, "Abbreviation");
+        Objects.requireNonNull(lexicon, "Lexicon");
+        Objects.requireNonNull(lexer, "Lexer");
+        Objects.requireNonNull(parser, "Parser");
+        Objects.requireNonNull(transformer, "Transformer");
         this.name = name;
         this.abbreviation = abbreviation;
         this.lexicon = lexicon;
         this.lexer = lexer;
         this.parser = parser;
+        this.transformer = transformer;
     }
 
     /**
@@ -115,4 +118,12 @@ public class Language implements Serializable {
         return parser;
     }
 
+    /**
+     * Returns the transformer constant this language uses.
+     *
+     * @return the transformer, {@code not null}
+     */
+    public MessageTransformer getTransformer() {
+        return transformer;
+    }
 }

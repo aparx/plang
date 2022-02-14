@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.regex.Pattern;
 
 /**
- * Collection of general utilities for the Plang-Library.
+ * Private utilities for the Plang-Library.
  *
  * @author Vinzent Zeband
  * @version 05:30 CET, 13.02.2022
@@ -32,9 +32,7 @@ public class PlangUtils {
      * @see #REGEX_SPECIAL_CHARACTERS
      */
     public static String escapeRegex(char cp) {
-        return (isSpecialRegexCharacter(cp)
-                ? ESCAPE_STRING : StringUtils.EMPTY)
-                + cp;
+        return (isSpecialRegexCharacter(cp) ? ESCAPE_STRING : StringUtils.EMPTY) + cp;
     }
 
     /**
@@ -49,8 +47,7 @@ public class PlangUtils {
      * @see #REGEX_SPECIAL_CHARACTERS
      */
     public static String escapeRegex(String str) {
-        if (StringUtils.isEmpty(str))
-            return StringUtils.EMPTY;
+        if (StringUtils.isEmpty(str)) return StringUtils.EMPTY;
         final int n = str.length();
         final char escp = '\\';
         if (n == 1) {
@@ -79,13 +76,23 @@ public class PlangUtils {
      * @see #REGEX_SPECIAL_CHARACTERS
      */
     public static boolean isSpecialRegexCharacter(char ch) {
-        if (ch < 21 || ch > 0x7d)
-            return false;
+        if (ch < 21 || ch > 0x7d) return false;
         return REGEX_SPECIAL_CHARACTERS.indexOf(ch) != -1;
     }
 
-    public static Class<?> getContravariant(Class<?> acceptingType) {
-        //TODO
-        return acceptingType;
+    /**
+     * Returns the highest superclass that is not equals the Java Object
+     * class off of {@code type}.
+     *
+     * @param type the target type to get from
+     * @return {@code type} if no superclass that is not object is found,
+     * otherwise the highest inheriting superclass.
+     */
+    public static Class<?> getTopSuperclass(Class<?> type) {
+        if (type == null) return null;
+        for (Class<?> c; (c = type.getSuperclass()) != null; type = c) {
+            if (c == Object.class) break;
+        }
+        return type;
     }
 }

@@ -1,6 +1,8 @@
 package io.github.sauranbone.plang.placeholder;
 
 import io.github.sauranbone.plang.PlangBitmask;
+import io.github.sauranbone.plang.map.DataBinder;
+import jdk.nashorn.internal.objects.NativeUint8Array;
 
 import static io.github.sauranbone.plang.placeholder.PlaceholderModifier.*;
 
@@ -41,8 +43,8 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
     private final Class<T> target;
 
     /**
-     * Allocates a new super message placeholder with the given {@code
-     * name} as the callable name of the placeholder.
+     * Allocates a new super message placeholder with the given
+     * {@code name} as the callable name of the placeholder.
      *
      * @param name   the callable name of this placeholder
      * @param target the target class type of this placeholder, null for
@@ -60,15 +62,15 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
      * and a static value transformer returning {@code object}.
      *
      * @param name   the target name of the placeholder
-     * @param object the target value that is returned whenever this {@code
-     *               transform} method is called
+     * @param object the target value that is returned whenever this
+     *               {@code transform} method is called
      * @param <T>    the target type of the placeholder
      * @return the newly allocated placeholder instance
      * @throws NullPointerException if {@code name} is null
      */
     public static <T> Placeholder<T> of(final String name, final T object) {
         Placeholder<T> placeholder = createInstance(name, s -> object, null);
-        placeholder.setModifiers(STATIC | NULLABLE);
+        placeholder.enable(STATIC | NULLABLE /* TODO may be redundant */);
         return placeholder;
     }
 
@@ -76,6 +78,10 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
      * Allocates a new message placeholder with given callable {@code name}
      * and {@code transformer}, which accepts receiving data and transforms
      * it into literal content that can be any object.
+     * <p>The given {@code type} is mostly used in connection to a
+     * {@link DataBinder} implementation that has a class as a bound key
+     * and the target value of it that can trigger this placeholder if the
+     * literal placeholder name is pointing towards this instance.
      *
      * @param name        the target name of the placeholder
      * @param transformer the target transformer of the placeholder
@@ -138,7 +144,7 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
 
     /**
      * Returns true if this placeholder can accept a null value using this
-     * transformative method and utility.
+     * transformative method and utility or is static.
      *
      * @return false if this placeholder is not nullable
      * @see PlaceholderModifier#NULLABLE
@@ -219,9 +225,7 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
         PlangBitmask.super.disable(modifier);
     }
 
-    private static <T> Placeholder<T> createInstance(final String name,
-                                                     final Transformer<T> transformer,
-                                                     Class<T> type) {
+    private static <T> Placeholder<T> createInstance(final String name, final Transformer<T> transformer, Class<T> type) {
         Objects.requireNonNull(transformer);
         return new Placeholder<T>(name, type) {
             @Override

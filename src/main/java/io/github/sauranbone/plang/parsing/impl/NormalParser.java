@@ -50,8 +50,10 @@ public class NormalParser implements MessageParser {
             String target = token.getValue();
             if (!lexicon.has(target)) {
                 //Send warning that target is not contained TODO
-                token = new MessageToken(token.getRaw(),
-                        null, MessageTokenType.LITERAL);
+                //And set that the variable is not contained in the lexicon
+                //at parse time.
+//                System.out.println("[Warning] placeholder " + target +
+//                        " is a dynamic placeholder.");
             }
             output.add(token);
         }

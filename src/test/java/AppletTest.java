@@ -27,11 +27,11 @@ public class AppletTest {
         lexicon.set(Placeholder.of("world", "world!"));
         Language language = new Language("english", "en",
                 lexicon, NormalLexer.DEFAULT_LEXER, NormalParser.DEFAULT_PARSER);
-        Message message = new Message("Hello {player}", language);
+        Message message = new Message("Hello {player} {xx}", language);
         System.out.println(message.getTokens());
 
         DataBinder map = new DataBindMap();
-        map.bind("player", "undestroy");
+        map.bind("XX", "undestroy");
         System.out.println(message.transform(map));
 
 //        Lexicon lexicon = new Lexicon();

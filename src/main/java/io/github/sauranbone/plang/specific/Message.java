@@ -54,7 +54,9 @@ public class Message {
      * <p>The {@code data} can be used to add additional not globally
      * accessible or dynamic accessible placeholders to a message and
      * transform them, or to overwrite placeholders that are globally
-     * accessible in this language's lexicon.
+     * accessible in this language's lexicon.  It acts like an extra
+     * layer of potential information that might only be necessary on
+     * this particular message or instance.
      * <p>Only bound string-, integer- and class-type keys are used off of
      * the provided {@code data} binding map.
      * <p>A literal placeholder is only transformed once.
@@ -134,9 +136,9 @@ public class Message {
                         continue;
                     }
                 }
-                //Warn that the placeholder is not bound
-                System.out.println("Placeholder " + val + " not" +
-                        " bound");
+                //TODO Warn that the placeholder is not bound
+//                System.out.println("Placeholder " + val + " not" +
+//                        " bound");
             }
             //Just append the token as literal text
             builder.append(token.getRaw());

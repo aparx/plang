@@ -9,7 +9,7 @@ You can download plang using automated build tools like **Maven** or **Gradle** 
 
 Maven:
 
-```maven
+```xml
 <dependency>
   <groupId>io.github.sauranbone</groupId>
   <artifactId>plang</artifactId>

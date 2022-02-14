@@ -1,5 +1,6 @@
 # plang
 High performant and advanced multilingual lexical analysis Java library to modify, cache, use and replace global or local placeholders, variables and parameters in preset or dynamic messages for multiple languages.
+![plang](https://user-images.githubusercontent.com/47287352/153893811-4956ac5a-0168-4123-99a8-062543470c69.png)
 
 ## Documentation
 More information about this project is listed below. Javadocs can be browsed here.

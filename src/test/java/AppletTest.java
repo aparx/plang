@@ -31,6 +31,7 @@ public class AppletTest {
         System.out.println(message.getTokens());
 
         DataBinder map = new DataBindMap();
+        map.bind("player", "OVERWRITE!");
         map.bind("XX", "undestroy");
         System.out.println(message.transform(map));
 

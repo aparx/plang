@@ -1,9 +1,7 @@
 package io.github.sauranbone.plang.map;
 
-import org.omg.CORBA.ObjectHelper;
+import io.github.sauranbone.plang.PlangUtils;
 
-import java.net.BindException;
-import java.time.temporal.ValueRange;
 import java.util.*;
 
 /**
@@ -135,6 +133,8 @@ public class DataBindMap extends AbstractPlangMap<Object, Object> implements Dat
             return ((String) key).toLowerCase(Locale.ROOT);
         } else if (key instanceof Number) {
             return checkIndex(((Number) key).intValue());
+        } else if (key instanceof Class) {
+            return PlangUtils.getContravariant((Class<?>) key);
         }
         return key;
     }

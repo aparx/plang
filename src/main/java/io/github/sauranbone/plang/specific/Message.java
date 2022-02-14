@@ -100,13 +100,12 @@ public class Message {
      * @throws NullPointerException if {@code data} is null
      */
     @SuppressWarnings("unchecked")
-    public String transform(DataBinder data) {
+    public synchronized String transform(DataBinder data) {
         Objects.requireNonNull(data);
         if (tokens.isEmpty()) return content;
 
         final StringBuilder builder = new StringBuilder();
         final Lexicon lexicon = language.getLexicon();
-
         //Iterate through every token and check the bindings
         for (int n = tokens.size(), i = 0, p = 0; i < n; i++) {
             MessageToken token = tokens.get(i);
@@ -124,7 +123,7 @@ public class Message {
                     //Access the placeholder directly and ask for its type
                     Placeholder<Object> ph = (Placeholder<Object>) lexicon.get(val);
                     if (ph == null) continue;   //Throw warning
-                    Class<?> type = PlangUtils.getTopClass(ph.getAcceptingType());
+                    Class<?> type = PlangUtils.getContravariant(ph.getAcceptingType());
                     if (ph.isTransformative() && data.isBound(type)) {
                         //TODO also add class boundary if index or string is
                         // set with a target value that is not null

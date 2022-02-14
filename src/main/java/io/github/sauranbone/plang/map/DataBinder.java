@@ -165,9 +165,12 @@ public interface DataBinder {
      * configuration in {@link #isCaseSensitive()}.
      * <p>If the given {@code key} is of type number, it will be
      * handled as an integer index, that is validated and checked.
-     * <p>If {@code key} is anything but of type string or number, it
-     * is computed as is, meaning the returning key is equal and
-     * indistinguishable to {@code key}.
+     * <p>If the given {@code key} is a class, the class's highest
+     * superclass, except object, is determined and used to allow
+     * contravariance.
+     * <p>If {@code key} is anything but of type string, number or a
+     * class, it is computed as is, meaning the returning key is equal
+     * and indistinguishable to {@code key}.
      *
      * @param key the target to be computed
      * @throws NullPointerException if {@code key} is null

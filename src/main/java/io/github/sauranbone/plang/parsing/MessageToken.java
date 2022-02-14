@@ -119,10 +119,6 @@ public class MessageToken {
 
     @Override
     public String toString() {
-        return "MessageToken{" +
-                "raw='" + raw + '\'' +
-                ", value='" + value + '\'' +
-                ", type=" + type +
-                '}';
+        return "MessageToken{" + "raw='" + raw + '\'' + ", value='" + value + '\'' + ", type=" + type + '}';
     }
 }

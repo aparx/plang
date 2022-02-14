@@ -157,12 +157,12 @@ public final class Lexicon extends AbstractPlangMap<String, Placeholder<?>> {
     }
 
     @Override
-    protected final Map<String, Placeholder<?>> createMap(Map<String, Placeholder<?>> input) {
+    protected Map<String, Placeholder<?>> createMap(Map<String, Placeholder<?>> input) {
         return new HashMap<>(input);
     }
 
     @Override
-    protected final Map<String, Placeholder<?>> createMap(int initialCapacity) {
+    protected Map<String, Placeholder<?>> createMap(int initialCapacity) {
         return new HashMap<>(initialCapacity);
     }
 

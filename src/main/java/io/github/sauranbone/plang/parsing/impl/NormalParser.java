@@ -22,6 +22,14 @@ import java.util.Objects;
  */
 public class NormalParser implements MessageParser {
 
+    /**
+     * A default normal parsing instance used to parse default generated
+     * tokens.
+     *
+     * @see NormalLexer
+     */
+    public static final NormalParser DEFAULT_PARSER = new NormalParser();
+
     @Override
     public ParsedTokens parse(Language language, List<MessageToken> tokens) {
         Objects.requireNonNull(language);

@@ -1,5 +1,7 @@
 import com.sun.org.apache.xml.internal.security.algorithms.MessageDigestAlgorithm;
 import io.github.sauranbone.plang.PlangUtils;
+import io.github.sauranbone.plang.map.DataBindMap;
+import io.github.sauranbone.plang.map.DataBinder;
 import io.github.sauranbone.plang.parsing.impl.NormalLexer;
 import io.github.sauranbone.plang.parsing.impl.NormalParser;
 import io.github.sauranbone.plang.placeholder.Placeholder;
@@ -23,10 +25,13 @@ public class AppletTest {
         Lexicon lexicon = new Lexicon();
         lexicon.set(Placeholder.of("player", "danishGunner"));
         lexicon.set(Placeholder.of("world", "world!"));
-        Language language = new Language("english", "en", lexicon,
-                NormalLexer.DEFAULT_LEXER, new NormalParser());
-        Message message = new Message("test", language);
+        Language language = new Language("english", "en",
+                lexicon, NormalLexer.DEFAULT_LEXER, NormalParser.DEFAULT_PARSER);
+        Message message = new Message("Hello {player}", language);
         System.out.println(message.getTokens());
+
+        DataBinder map = new DataBindMap();
+        System.out.println(message.transform(map));
 
 //        Lexicon lexicon = new Lexicon();
 //        lexicon.set(Placeholder.of("test", "asd"));

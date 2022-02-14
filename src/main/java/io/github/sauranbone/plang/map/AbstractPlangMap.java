@@ -138,7 +138,7 @@ public abstract class AbstractPlangMap<K, V> {
      *
      * @return the keys of this map
      */
-    protected synchronized Set<K> keys() {
+    protected synchronized Collection<K> keys() {
         return map.keySet();
     }
 

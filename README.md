@@ -10,17 +10,17 @@ You can download plang using automated build tools like **Maven** or **Gradle** 
 Maven:
 
 ```maven
-        <dependency>
-            <groupId>io.github.sauranbone</groupId>
-            <artifactId>plang</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
+<dependency>
+  <groupId>io.github.sauranbone</groupId>
+  <artifactId>plang</artifactId>
+  <version>1.0-SNAPSHOT</version>
+</dependency>
 ```
 
 Gradle:
 
 ```gradle
-       require 'io.github.sauranbone:plang:1.0-SNAPSHOT';
+require 'io.github.sauranbone:plang:1.0-SNAPSHOT';
 ```
 
 Or by simply downloading the latest released JAR-File.

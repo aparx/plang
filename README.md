@@ -8,6 +8,7 @@ More information about this project is listed below. Javadocs can be browsed her
 You can download plang using automated build tools like **Maven** or **Gradle** by adding the following source.
 
 Maven:
+
 ```maven
         <dependency>
             <groupId>io.github.sauranbone</groupId>
@@ -17,6 +18,7 @@ Maven:
 ```
 
 Gradle:
+
 ```gradle
        require 'io.github.sauranbone:plang:1.0-SNAPSHOT';
 ```

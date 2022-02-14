@@ -20,7 +20,7 @@ public class TestLexicon {
         assertNotNull(lexicon.get("foo"));
         assertTrue(lexicon.get("foo").isStatic());
         assertTrue(lexicon.get("foo").isNullable());
-        assertFalse(lexicon.get("foo").hasAcceptingType());
+        assertFalse(lexicon.get("foo").isTransformative());
         assertEquals("bar", lexicon.get("foo").transform(null));
     }
 

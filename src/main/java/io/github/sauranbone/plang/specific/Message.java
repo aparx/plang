@@ -1,7 +1,9 @@
 package io.github.sauranbone.plang.specific;
 
+import io.github.sauranbone.plang.PlangUtils;
 import io.github.sauranbone.plang.map.DataBinder;
 import io.github.sauranbone.plang.parsing.MessageLexer;
+import io.github.sauranbone.plang.parsing.MessageToken;
 import io.github.sauranbone.plang.parsing.ParsedTokens;
 import io.github.sauranbone.plang.parsing.MessageParser;
 import io.github.sauranbone.plang.placeholder.Placeholder;
@@ -48,7 +50,11 @@ public class Message {
 
     /**
      * Transforms this message using the given {@code data} as the
-     * primary data providing structure.
+     * second data providing structure after this language's lexicon.
+     * <p>The {@code data} can be used to add additional not globally
+     * accessible or dynamic accessible placeholders to a message and
+     * transform them, or to overwrite placeholders that are globally
+     * accessible in this language's lexicon.
      * <p>Only bound string-, integer- and class-type keys are used off of
      * the provided {@code data} binding map.
      * <p>A literal placeholder is only transformed once.
@@ -91,9 +97,51 @@ public class Message {
      * @return the resulting and live transformed string
      * @throws NullPointerException if {@code data} is null
      */
+    @SuppressWarnings("unchecked")
     public String transform(DataBinder data) {
         Objects.requireNonNull(data);
-        return "";
+        if (tokens.isEmpty()) return content;
+
+        final StringBuilder builder = new StringBuilder();
+        final Lexicon lexicon = language.getLexicon();
+
+        //Iterate through every token and check the bindings
+        for (int n = tokens.size(), i = 0, p = 0; i < n; i++) {
+            MessageToken token = tokens.get(i);
+            if (token.isPlaceholder()) {
+                //Process the token and its content compared to this attribs
+                final String val = token.getValue();
+                final int idx = p++;
+                if (data.isBound(idx)) {
+                    builder.append(data.get(idx));
+                    continue;
+                } else if (data.isBound(val)) {
+                    builder.append(data.get(val));
+                    continue;
+                } else if (lexicon.has(val)) {
+                    //Access the placeholder directly and ask for its type
+                    Placeholder<Object> ph = (Placeholder<Object>) lexicon.get(val);
+                    if (ph == null) continue;   //Throw warning
+                    Class<?> type = PlangUtils.getTopClass(ph.getAcceptingType());
+                    if (ph.isTransformative() && data.isBound(type)) {
+                        //TODO also add class boundary if index or string is
+                        // set with a target value that is not null
+                        builder.append(ph.transform(data.get(type)));
+                        continue;
+                    } else if (ph.isStatic() && ph.isNullable()) {
+                        //Get static access or nullable access
+                        builder.append(ph.transform(null));
+                        continue;
+                    }
+                }
+                //Warn that the placeholder is not bound
+                System.out.println("Placeholder " + val + " not" +
+                        " bound");
+            }
+            //Just append the token as literal text
+            builder.append(token.getRaw());
+        }
+        return builder.toString();
     }
 
     /**

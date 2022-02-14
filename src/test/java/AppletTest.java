@@ -31,6 +31,7 @@ public class AppletTest {
         System.out.println(message.getTokens());
 
         DataBinder map = new DataBindMap();
+        map.bind("player", "undestroy");
         System.out.println(message.transform(map));
 
 //        Lexicon lexicon = new Lexicon();
@@ -43,6 +44,18 @@ public class AppletTest {
 //
 //        MessageToken token = new MessageToken("test", "test", MessageTokenType.LITERAL);
 //        Placeholder<?> ph = Placeholder.of("test", s -> "test", String.class);
+    }
+
+    public static class PlayerTestObject {
+        private String name;
+
+        public PlayerTestObject(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
     }
 
 }

@@ -111,7 +111,7 @@ public abstract class Placeholder<T> implements Serializable, PlangBitmask, Tran
      * @see #hasModifier(int)
      * @see PlaceholderModifier#STATIC
      */
-    public final boolean hasAcceptingType() {
+    public final boolean isTransformative() {
         return target != null && !hasModifier(STATIC);
     }
 

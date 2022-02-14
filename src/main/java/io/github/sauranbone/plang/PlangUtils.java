@@ -84,4 +84,8 @@ public class PlangUtils {
         return REGEX_SPECIAL_CHARACTERS.indexOf(ch) != -1;
     }
 
+    public static Class<?> getTopClass(Class<?> acceptingType) {
+        //TODO
+        return acceptingType;
+    }
 }

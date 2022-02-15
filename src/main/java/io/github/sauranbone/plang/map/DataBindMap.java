@@ -26,8 +26,8 @@ public class DataBindMap extends HashPlangMap<Object, Object> implements DataBin
      * Allocates a new binding map with no initial values that is
      * case-insensitive.
      * <p>Case-sensitivity is automatically set to this
-     * {@link #DEFAULT_CASE_SENSITIVITY} using
-     * {@link #DataBindMap(Map, boolean)}.
+     * {@link #DEFAULT_CASE_SENSITIVITY} using {@link #DataBindMap(Map,
+     * boolean)}.
      *
      * @see #DataBindMap(boolean)
      * @see #isCaseSensitive()
@@ -53,8 +53,8 @@ public class DataBindMap extends HashPlangMap<Object, Object> implements DataBin
     /**
      * Allocates a new binding map using given {@code initialCapacity}.
      * <p>Case-sensitivity is automatically set to this
-     * {@link #DEFAULT_CASE_SENSITIVITY} using
-     * {@link #DataBindMap(Map, boolean)}.
+     * {@link #DEFAULT_CASE_SENSITIVITY} using {@link #DataBindMap(Map,
+     * boolean)}.
      *
      * @param initialCapacity the target initial capacity of this map
      * @see #DataBindMap(int, boolean)
@@ -68,8 +68,8 @@ public class DataBindMap extends HashPlangMap<Object, Object> implements DataBin
      * Allocates a new binding map using given {@code map} as initial
      * values, which are copied over to this map reference.
      * <p>Case-sensitivity is automatically set to this
-     * {@link #DEFAULT_CASE_SENSITIVITY} using
-     * {@link #DataBindMap(Map, boolean)}.
+     * {@link #DEFAULT_CASE_SENSITIVITY} using {@link #DataBindMap(Map,
+     * boolean)}.
      *
      * @param map the target initial values copied into this map
      * @see #DataBindMap(int, boolean)
@@ -118,8 +118,8 @@ public class DataBindMap extends HashPlangMap<Object, Object> implements DataBin
      * <p>If {@code types} contains any null value it is skipped and not
      * bound.
      * <p>Case-sensitivity is automatically set to this
-     * {@link #DEFAULT_CASE_SENSITIVITY} using
-     * {@link #typesSensitivity(boolean, Object...)}.
+     * {@link #DEFAULT_CASE_SENSITIVITY} using {@link
+     * #typesSensitivity(boolean, Object...)}.
      *
      * @param types the target objects whose types are bound to the
      *              returning map
@@ -149,8 +149,9 @@ public class DataBindMap extends HashPlangMap<Object, Object> implements DataBin
      * @see #indexSensitivity(boolean, Object...)
      */
     public static DataBindMap typesSensitivity(boolean caseSensitive, Object... types) {
-        if (ArrayUtils.isEmpty(types)) return new DataBindMap();
-        DataBindMap map = new DataBindMap();
+        if (ArrayUtils.isEmpty(types))
+            return new DataBindMap(caseSensitive);
+        DataBindMap map = new DataBindMap(caseSensitive);
         for (Object type : types) {
             if (type == null) continue;
             map.bindType(type);
@@ -160,11 +161,11 @@ public class DataBindMap extends HashPlangMap<Object, Object> implements DataBin
 
 
     /**
-     * Allocates a new binding map having every element within
-     * {@code array} bound to their corresponding index.
+     * Allocates a new binding map having every element within {@code
+     * array} bound to their corresponding index.
      * <p>Case-sensitivity is automatically set to this
-     * {@link #DEFAULT_CASE_SENSITIVITY} using
-     * {@link #indexSensitivity(boolean, Object...)}
+     * {@link #DEFAULT_CASE_SENSITIVITY} using {@link
+     * #indexSensitivity(boolean, Object...)}
      *
      * @param array the target values to be pushed to the final map
      * @see #indexSensitivity(boolean, Object...)
@@ -172,12 +173,12 @@ public class DataBindMap extends HashPlangMap<Object, Object> implements DataBin
      * @see #push(Object...)
      */
     public static DataBindMap index(Object... array) {
-        return index(DEFAULT_CASE_SENSITIVITY, array);
+        return indexSensitivity(DEFAULT_CASE_SENSITIVITY, array);
     }
 
     /**
-     * Allocates a new binding map having every element within
-     * {@code array} bound to their corresponding index.
+     * Allocates a new binding map having every element within {@code
+     * array} bound to their corresponding index.
      *
      * @param caseSensitive false to enable case-insensitivity
      * @param array         the target values to be pushed to the final

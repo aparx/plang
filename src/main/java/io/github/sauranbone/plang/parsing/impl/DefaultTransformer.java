@@ -54,22 +54,22 @@ import java.util.Objects;
  *     </tr>
  * </table>
  */
-public class NormalTransformer implements MessageTransformer {
+public class DefaultTransformer implements MessageTransformer {
 
     /**
      * Default message transformer instance having standard
      * specifications.
      *
-     * @see NormalTransformer
+     * @see DefaultTransformer
      */
-    transient public static final NormalTransformer SINGLETON = new NormalTransformer();
+    transient public static final DefaultTransformer SINGLETON = new DefaultTransformer();
 
     /**
      * Allocates a new normal transformer having standard specifications.
      *
      * @see #SINGLETON
      */
-    protected NormalTransformer() {
+    protected DefaultTransformer() {
         //Hide constructor for singleton but to still allow in inheritance
     }
 
@@ -81,7 +81,7 @@ public class NormalTransformer implements MessageTransformer {
      * @param message  the target message that is transformed
      * @param data     the target binding information
      * @return the translated {@code tokens} sequence
-     * @see NormalTransformer Normal Transformer Specifications
+     * @see DefaultTransformer Normal Transformer Specifications
      */
     @Override
     @SuppressWarnings("unchecked")

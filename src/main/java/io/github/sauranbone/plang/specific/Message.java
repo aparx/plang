@@ -1,10 +1,8 @@
 package io.github.sauranbone.plang.specific;
 
-import io.github.sauranbone.plang.PlangUtils;
 import io.github.sauranbone.plang.map.DataBindMap;
 import io.github.sauranbone.plang.map.DataBinder;
 import io.github.sauranbone.plang.parsing.*;
-import io.github.sauranbone.plang.placeholder.Placeholder;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,9 +22,9 @@ public class Message {
 
     final String content;
 
-    private ParsedTokens tokens;
+    final ParsedTokens tokens;
 
-    private Language language;
+    final Language language;
 
     /**
      * Allocates a new message having given {@code content} and parses it
@@ -34,6 +32,7 @@ public class Message {
      *
      * @param content  the target content of this message
      * @param language the target language of this message
+     * @throws NullPointerException if {@code language} is null
      * @see Language#parse(String)
      * @see Language#getLexer()
      * @see Language#getParser()
@@ -41,9 +40,11 @@ public class Message {
      * @see MessageParser#parse(Language, List)
      */
     public Message(String content, Language language) {
+        Objects.requireNonNull(language, "Language");
         this.content = content;
         this.language = language;
-        parse();
+        this.tokens = parse();
+        Objects.requireNonNull(tokens, "The tokens of a message cannot be null");
     }
 
     /**
@@ -60,7 +61,7 @@ public class Message {
      *
      * @see #transform(DataBinder)
      */
-    public synchronized String transform(Object... array) {
+    public synchronized String transform() {
         return transform(new DataBindMap());
     }
 
@@ -89,6 +90,8 @@ public class Message {
      */
     public synchronized String transform(DataBinder data) {
         Objects.requireNonNull(data);
+        //Automatically bind all available types
+        bindKnowledge(data);
         MessageTransformer transformer = language.getTransformer();
         Objects.requireNonNull(transformer);    //Nullcheck for safety
         return transformer.transform(tokens, language, content, data);
@@ -124,8 +127,21 @@ public class Message {
     /**
      * Parses this message and validates the tokens to be not null.
      */
-    protected final void parse() {
-        tokens = language.parse(content);
-        Objects.requireNonNull(tokens, "The tokens of a message cannot be null");
+    protected ParsedTokens parse() {
+        return language.parse(content);
+    }
+
+    /**
+     * Binds default types that are known at type of execution about this
+     * message or language to the given {@code data}, if not bound
+     * already.
+     *
+     * @param data the target data to bind to
+     * @throws NullPointerException if {@code data} is null
+     */
+    protected void bindKnowledge(DataBinder data) {
+        Objects.requireNonNull(data);
+        if (!data.isTypeBound(language)) data.bindType(language);
+        if (!data.isTypeBound(this)) data.bindType(this);
     }
 }

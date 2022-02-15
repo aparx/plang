@@ -1,24 +1,23 @@
 package io.github.sauranbone.plang.specific;
 
-import com.sun.org.apache.bcel.internal.generic.FADD;
-import io.github.sauranbone.plang.map.AbstractPlangMap;
+import io.github.sauranbone.plang.map.HashPlangMap;
 import io.github.sauranbone.plang.placeholder.Placeholder;
 
-import javax.xml.stream.FactoryConfigurationError;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 /**
  * Placeholder lexicon containing all the globally accessible placeholders
- * that can be accessed and modified using this utilities.
+ * that can be accessed and modified using these utilities.
+ * <p>A lexicon is independent of a language, as it can be used for
+ * multiple languages and is even intend to do.
  *
  * @author Vinzent Zeband
  * @version 23:33 CET, 12.02.2022
  * @since 1.0
  */
-public final class Lexicon extends AbstractPlangMap<String, Placeholder<?>> {
+public final class Lexicon extends HashPlangMap<String, Placeholder<?>> {
 
     private final boolean caseSensitive;
 
@@ -26,9 +25,9 @@ public final class Lexicon extends AbstractPlangMap<String, Placeholder<?>> {
      * Allocates a new lexicon having case insensitivity.
      * <p>When a placeholder is set, it is automatically bound to its own
      * name but all in lowercase, in order to keep a case insensitivity.
-     * This case sensitivity can be changed by allocating the {@link
-     * #Lexicon(boolean)} constructor, thus this constructor is equivalent
-     * to the following:
+     * This case sensitivity can be changed by allocating the
+     * {@link #Lexicon(boolean)} constructor, thus this constructor is
+     * equivalent to the following:
      * <pre><code>
      *     Lexicon lexicon = new Lexicon(false);
      * </code></pre>
@@ -44,11 +43,12 @@ public final class Lexicon extends AbstractPlangMap<String, Placeholder<?>> {
      * configuration attribute.
      * <p>The case sensitivity, if set to false, decides whether
      * placeholder names should be made lowercase when mapped, in order to
-     * keep placeholder names case insensitive.
+     * keep placeholder names case-insensitive.
      *
      * @param caseSensitive the target sensitivity
-     * @apiNote It is recommended to make placeholder names case
-     * insensitive, to be easier accessed by the third party developer.
+     * @apiNote It is recommended to make placeholder names
+     * case-insensitive, to be easier accessed by the third party
+     * developer.
      */
     public Lexicon(boolean caseSensitive) {
         this.caseSensitive = caseSensitive;
@@ -56,9 +56,9 @@ public final class Lexicon extends AbstractPlangMap<String, Placeholder<?>> {
 
     /**
      * Returns true if placeholder names are mapped as is, meaning that
-     * they are case sensitive.
+     * they are case-sensitive.
      *
-     * @return false if mapped placeholders are not case sensitive and
+     * @return false if mapped placeholders are not case-sensitive and
      * their binding names are made lowercase (default: false)
      */
     public boolean isCaseSensitive() {
@@ -90,8 +90,8 @@ public final class Lexicon extends AbstractPlangMap<String, Placeholder<?>> {
     }
 
     /**
-     * Retrieves the contained placeholder that is having the given {@code
-     * name} as its literal name.
+     * Retrieves the contained placeholder that is having the given
+     * {@code name} as its literal name.
      *
      * @param name the target name to be retrieved
      * @return the target placeholder that is bound at {@code name}
@@ -154,16 +154,6 @@ public final class Lexicon extends AbstractPlangMap<String, Placeholder<?>> {
     @Override
     public synchronized Map<String, Placeholder<?>> getMap() {
         return super.getMap();
-    }
-
-    @Override
-    protected Map<String, Placeholder<?>> createMap(Map<String, Placeholder<?>> input) {
-        return new HashMap<>(input);
-    }
-
-    @Override
-    protected Map<String, Placeholder<?>> createMap(int initialCapacity) {
-        return new HashMap<>(initialCapacity);
     }
 
 }

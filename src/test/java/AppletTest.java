@@ -1,15 +1,8 @@
-import io.github.sauranbone.plang.PlangUtils;
 import io.github.sauranbone.plang.map.DataBindMap;
 import io.github.sauranbone.plang.map.DataBinder;
-import io.github.sauranbone.plang.parsing.impl.NormalLexer;
-import io.github.sauranbone.plang.parsing.impl.NormalParser;
-import io.github.sauranbone.plang.parsing.impl.NormalTransformer;
+import io.github.sauranbone.plang.specific.MessageRegistry;
 import io.github.sauranbone.plang.placeholder.Placeholder;
-import io.github.sauranbone.plang.specific.Language;
-import io.github.sauranbone.plang.specific.Lexicon;
-import io.github.sauranbone.plang.specific.Message;
-
-import java.util.Locale;
+import io.github.sauranbone.plang.specific.*;
 
 /**
  * @author Vinzent Zeband
@@ -20,21 +13,30 @@ public class AppletTest {
 
     public static void main(String[] args) {
 
-        System.out.println(PlangUtils.getTopSuperclass(Lexicon.class));
-
         Lexicon lexicon = new Lexicon();
+        Language language = new Language("English", "en", lexicon);
+
+        //Fill the lexicon with values
         lexicon.set(Placeholder.of("test", 2));
         lexicon.set(Placeholder.of("user.name", User::getName, User.class));
         lexicon.set(Placeholder.of("user.age", User::getAge, User.class));
+        lexicon.set(Placeholder.of("lang.name", Language::getName, Language.class));
+        lexicon.set(Placeholder.of("lang.abb", Language::getAbbreviation, Language.class));
+        lexicon.set(Placeholder.of("lang.id", l -> l.getIdentifier(), Language.class));
 
-        Language language = new Language("english", "en", lexicon, NormalLexer.DEFAULT_LEXER, NormalParser.SINGLETON, NormalTransformer.SINGLETON);
-        Message message = new Message("Hello {user.name}, are you really" +
-                " {user.age} years old?", language);
+        //Create language based registry
+        MessageRegistry registry = language.getContent();
+        registry.set("error", "<Cannot localize message>");
+        registry.set("hi-user", "Welcome {user.name}, you are reading " +
+                "{lang.name} ({lang.abb}, {lang.id}) language!");
+        registry.set("bye-user", "The user {user.name} has left our " + "server!");
+        Message message = registry.get("hi-user");
         System.out.println(message.getTokens());
 
-        DataBinder map = new DataBindMap();
-        map.bindType(new User("undestroy", 33));
-        System.out.println(message.transform(map));
+        User user = new User("vincent", 33);
+
+        DataBinder payload = DataBindMap.types(user);
+        System.out.println(message.transform(payload));
 
 //        Lexicon lexicon = new Lexicon();
 //        lexicon.set(Placeholder.of("test", "asd"));

@@ -54,9 +54,23 @@ public abstract class AbstractPlangMap<K, V> {
         } else this.map = createMap(0);
     }
 
-    protected abstract Map<K, V> createMap(Map<K, V> input);
+    /**
+     * Returns a newly allocated map implementation accepting given
+     * {@code input} as initial values if possible.
+     *
+     * @param input the target initial values
+     * @return the newly allocated map instance
+     */
+    abstract protected Map<K, V> createMap(Map<K, V> input);
 
-    protected abstract Map<K, V> createMap(int initialCapacity);
+    /**
+     * Returns a newly allocated map implementation accepting given
+     * {@code initialCapacity} as initial capacity if possible.
+     *
+     * @param initialCapacity the target initial capacity of the map
+     * @return the newly allocated map instance
+     */
+    abstract protected Map<K, V> createMap(int initialCapacity);
 
     /**
      * Returns true if {@code key} is already bound.

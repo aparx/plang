@@ -1,7 +1,9 @@
 package io.github.sauranbone.plang.specific;
 
-import com.sun.istack.internal.localization.Localizer;
 import io.github.sauranbone.plang.parsing.*;
+import io.github.sauranbone.plang.parsing.impl.NormalLexer;
+import io.github.sauranbone.plang.parsing.impl.DefaultParser;
+import io.github.sauranbone.plang.parsing.impl.DefaultTransformer;
 
 import java.io.Serializable;
 import java.util.List;
@@ -23,6 +25,8 @@ public class Language implements Serializable {
     private final MessageParser parser;
     private final MessageTransformer transformer;
 
+    MessageRegistry registry;
+
     /**
      * Allocates a new language having an entire {@code name}, an
      * {@code abbreviation} and further more constant attributes and
@@ -36,9 +40,7 @@ public class Language implements Serializable {
      * @param transformer  the target message transforming utility
      * @throws NullPointerException if any argument is null
      */
-    public Language(String name, String abbreviation, Lexicon lexicon,
-                    MessageLexer lexer, MessageParser parser,
-                    MessageTransformer transformer) {
+    public Language(String name, String abbreviation, Lexicon lexicon, MessageLexer lexer, MessageParser parser, MessageTransformer transformer) {
         Objects.requireNonNull(name, "Name");
         Objects.requireNonNull(abbreviation, "Abbreviation");
         Objects.requireNonNull(lexicon, "Lexicon");
@@ -51,6 +53,59 @@ public class Language implements Serializable {
         this.lexer = lexer;
         this.parser = parser;
         this.transformer = transformer;
+        this.registry = new MessageRegistry(this);
+    }
+
+    /**
+     * Allocates a new language having an entire {@code name}, an
+     * {@code abbreviation} and default processors.
+     *
+     * @param name         the target full name of this language
+     * @param abbreviation this language's abbreviation
+     * @param lexicon      the lexicon that is used
+     * @throws NullPointerException if any argument is null
+     * @see #Language(String, String, Lexicon, MessageLexer, MessageParser,
+     * MessageTransformer)
+     * @see NormalLexer#DEFAULT_LEXER
+     * @see DefaultParser#SINGLETON
+     * @see DefaultTransformer#SINGLETON
+     * @see MessageRegistry
+     */
+    public Language(String name, String abbreviation, Lexicon lexicon) {
+        this(name, abbreviation, lexicon, NormalLexer.DEFAULT_LEXER,
+                DefaultParser.SINGLETON, DefaultTransformer.SINGLETON);
+    }
+
+    /**
+     * Allocates a new language having an entire {@code name}, an
+     * {@code abbreviation} and default processors and lexicon.
+     *
+     * @param name         the target full name of this language
+     * @param abbreviation this language's abbreviation
+     * @throws NullPointerException if any argument is null
+     * @see #Language(String, String, Lexicon)
+     * @see #Language(String, String, Lexicon, MessageLexer, MessageParser,
+     * MessageTransformer)
+     * @see Lexicon
+     * @see NormalLexer#DEFAULT_LEXER
+     * @see DefaultParser#SINGLETON
+     * @see DefaultTransformer#SINGLETON
+     */
+    public Language(String name, String abbreviation) {
+        this(name, abbreviation, new Lexicon());
+    }
+
+    /**
+     * Returns the string of identifier of {@code language}.
+     * <p>If {@code language} is null, null is returned.
+     * <p>If the resolving {@link #getIdentifier()} is null, a string
+     * with content "null" is returned.
+     *
+     * @param language the target language to resolve
+     */
+    public static String getIdentifier(Language language) {
+        if (language == null) return null;
+        return Objects.toString(language.getIdentifier());
     }
 
     /**
@@ -92,6 +147,27 @@ public class Language implements Serializable {
     }
 
     /**
+     * Returns the identifier that is used in hashing or equal comparison
+     * to uniquely identify a given language.
+     * <p>The identifier is by default a combination or mixture of the
+     * language's properties {@code name} and {@code abbreviation}.
+     * <p>The default identifier is equal to the following scheme:
+     * <pre><code>
+     *     String id = name + '/' + abbreviation;
+     * </code></pre>
+     * <p>The identifier is used to uniquely identify a language and is
+     * also used to specify whenever a language is equal to another
+     * language, even if its registered content is not equal.
+     *
+     * @return the identifier of this language, {@code not null}
+     * @apiNote It is by design, that this method is overridable, so third
+     * party developers can change the way the identifier is meant.
+     */
+    public String getIdentifier() {
+        return name + '/' + abbreviation;
+    }
+
+    /**
      * Returns the primary lexicon that is used in this language.
      *
      * @return this language's target placeholder lexicon
@@ -125,5 +201,60 @@ public class Language implements Serializable {
      */
     public MessageTransformer getTransformer() {
         return transformer;
+    }
+
+    /**
+     * Returns the messaging registry, containing and keeping all the
+     * messages that are accessible in the language's scope.
+     *
+     * @return the target registry of this language, {@code not null}
+     * @throws NullPointerException if this registry is null
+     */
+    public synchronized final MessageRegistry getContent() {
+        return Objects.requireNonNull(registry);
+    }
+
+    /**
+     * Updates the registry for this language scope.
+     *
+     * @param registry the new registry, {@code not null}
+     * @throws NullPointerException     if {@code registry} is null
+     * @throws IllegalArgumentException if the {@code registry}'s language
+     *                                  is not equal to this
+     * @apiNote Due to the {@code registry} having to accept a language it
+     * adds another level of unnecessary complexity to the language and
+     * might be removed in future versions far away.  Thus, it is yet not
+     * deprecated but might be in the future.
+     */
+    public synchronized void setContent(MessageRegistry registry) {
+        Objects.requireNonNull(registry, "Registry");
+        registry.checkLangEqual(this);
+        this.registry = registry;
+    }
+
+    /**
+     * Returns true if this language identifier is equal to the given
+     * {@code language}'s identifier.
+     * <p>This method is used in {@link #equals(Object)} by default.
+     *
+     * @param language the language to be compared to
+     * @return false if {@code language} does not have the same identifier
+     * or is null compared to this language
+     */
+    public boolean isEqual(Language language) {
+        if (language == null) return false;
+        return getIdentifier().equals(language.getIdentifier());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        return isEqual((Language) o);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getIdentifier());
     }
 }

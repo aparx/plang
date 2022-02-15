@@ -206,6 +206,22 @@ public interface DataBinder {
     boolean isBound(Object key);
 
     /**
+     * Returns true if {@code obj}'s class is already bound as a type.
+     *
+     * @param obj the target object to get the type off
+     * @return false if {@code obj} class is not bound
+     * @throws NullPointerException if {@code obj} is null
+     * @implSpec The default implementation uses
+     * {@link #computeKey(Object)} on the class of {@code obj}.
+     * @see #computeKey(Object)
+     * @see PlangUtils#getTopSuperclass(Class)
+     */
+    default boolean isTypeBound(Object obj) {
+        Objects.requireNonNull(obj);
+        return isBound(computeKey(obj.getClass()));
+    }
+
+    /**
      * Returns the value that is bound to the given {@code key} and
      * computes the key depending on this configuration.
      * <p>The given {@code key} is computed depending on its type as

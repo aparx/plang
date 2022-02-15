@@ -13,7 +13,7 @@ import java.util.*;
  * @version 23:33 CET, 12.02.2022
  * @since 1.0
  */
-public class DataBindMap extends AbstractPlangMap<Object, Object> implements DataBinder {
+public class DataBindMap extends HashPlangMap<Object, Object> implements DataBinder {
 
     transient public static final boolean DEFAULT_CASE_SENSITIVITY = false;
 
@@ -112,21 +112,80 @@ public class DataBindMap extends AbstractPlangMap<Object, Object> implements Dat
     }
 
     /**
+     * Allocates a new binding map having the given different {@code types}
+     * bound to their corresponding highest superclasses using key
+     * computation on their classes.
+     * <p>If {@code types} contains any null value it is skipped and not
+     * bound.
+     * <p>Case-sensitivity is automatically set to this
+     * {@link #DEFAULT_CASE_SENSITIVITY} using
+     * {@link #typesSensitivity(boolean, Object...)}.
+     *
+     * @param types the target objects whose types are bound to the
+     *              returning map
+     * @see #typesSensitivity(boolean, Object...)
+     * @see #computeKey(Object)
+     * @see DataBindMap#bindType(Object)
+     * @see DataBindMap#bindType(Object...)
+     * @see #indexSensitivity(boolean, Object...)
+     */
+    public static DataBindMap types(Object... types) {
+        return typesSensitivity(DEFAULT_CASE_SENSITIVITY, types);
+    }
+
+    /**
+     * Allocates a new binding map having the given different {@code types}
+     * bound to their corresponding highest superclasses using key
+     * computation on their classes.
+     * <p>If {@code types} contains any null value it is skipped and not
+     * bound.
+     *
+     * @param caseSensitive false to enable case-insensitivity
+     * @param types         the target objects whose types are bound to the
+     *                      returning map
+     * @see #computeKey(Object)
+     * @see DataBindMap#bindType(Object)
+     * @see DataBindMap#bindType(Object...)
+     * @see #indexSensitivity(boolean, Object...)
+     */
+    public static DataBindMap typesSensitivity(boolean caseSensitive, Object... types) {
+        if (ArrayUtils.isEmpty(types)) return new DataBindMap();
+        DataBindMap map = new DataBindMap();
+        for (Object type : types) {
+            if (type == null) continue;
+            map.bindType(type);
+        }
+        return map;
+    }
+
+
+    /**
      * Allocates a new binding map having every element within
      * {@code array} bound to their corresponding index.
+     * <p>Case-sensitivity is automatically set to this
+     * {@link #DEFAULT_CASE_SENSITIVITY} using
+     * {@link #indexSensitivity(boolean, Object...)}
      *
      * @param array the target values to be pushed to the final map
-     * @apiNote There is yet no default case sensitivity array version of
-     * this allocation triggering method as the unpacking of an array might
-     * cause problems whenever the first array element is a boolean,
-     * because of the method being overloaded with this parameter types
-     * even tho different were meant (only array was meant, not the boolean
-     * and array).  This might change in future versions depending on the
-     * request for it.
+     * @see #indexSensitivity(boolean, Object...)
      * @see #DataBindMap(int, boolean)
      * @see #push(Object...)
      */
-    public static DataBindMap index(boolean caseSensitive, Object... array) {
+    public static DataBindMap index(Object... array) {
+        return index(DEFAULT_CASE_SENSITIVITY, array);
+    }
+
+    /**
+     * Allocates a new binding map having every element within
+     * {@code array} bound to their corresponding index.
+     *
+     * @param caseSensitive false to enable case-insensitivity
+     * @param array         the target values to be pushed to the final
+     *                      map
+     * @see #DataBindMap(int, boolean)
+     * @see #push(Object...)
+     */
+    public static DataBindMap indexSensitivity(boolean caseSensitive, Object... array) {
         int length = ArrayUtils.getLength(array);
         DataBindMap map = new DataBindMap(length, caseSensitive);
         map.push(array);    //Finally, push the actual values
@@ -216,16 +275,6 @@ public class DataBindMap extends AbstractPlangMap<Object, Object> implements Dat
     @Override
     public int size() {
         return super.size();
-    }
-
-    @Override
-    protected final Map<Object, Object> createMap(Map<Object, Object> input) {
-        return input == null ? createMap(0) : new HashMap<>(input);
-    }
-
-    @Override
-    protected final Map<Object, Object> createMap(int initialCapacity) {
-        return new HashMap<>(initialCapacity);
     }
 
     private int checkIndex(int intValue) {

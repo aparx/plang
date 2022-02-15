@@ -18,7 +18,7 @@ import java.util.Objects;
  * @see MessageParser
  * @since 1.0
  */
-public class NormalParser implements MessageParser {
+public class DefaultParser implements MessageParser {
 
     /**
      * A default normal parsing instance used to parse default generated
@@ -26,14 +26,14 @@ public class NormalParser implements MessageParser {
      *
      * @see NormalLexer
      */
-    public static final NormalParser SINGLETON = new NormalParser();
+    public static final DefaultParser SINGLETON = new DefaultParser();
 
     /**
      * Allocates a new normal parser instance.
      *
      * @see #SINGLETON
      */
-    protected NormalParser() {
+    protected DefaultParser() {
         //Hide constructor for singleton but to still allow in inheritance
     }
 

@@ -36,9 +36,9 @@ public class NormalLexer extends RegexLexer {
     final String opening, closing;
 
     /**
-     * Allocates a normal lexer having an {@code opening} and {@code
-     * closing} as content around a target placeholder in order to indicate
-     * that the sequence is meant to be a placeholder.
+     * Allocates a normal lexer having an {@code opening} and
+     * {@code closing} as content around a target placeholder in order to
+     * indicate that the sequence is meant to be a placeholder.
      * <p>The given {@code opening} and {@code closing} strings are
      * automatically escaped if required and thus do not need to be escaped
      * already.  These strings are not allowed to represent regular
@@ -80,8 +80,8 @@ public class NormalLexer extends RegexLexer {
     /**
      * Returns the leading character before a placeholder name.
      *
-     * @return the leading character before entering a placeholder, {@code
-     * nullable}
+     * @return the leading character before entering a placeholder,
+     * {@code nullable}
      */
     public String getOpening() {
         return opening;
@@ -90,8 +90,8 @@ public class NormalLexer extends RegexLexer {
     /**
      * Returns the closing characters after a placeholder name.
      *
-     * @return the tailing characters after entering a placeholder, {@code
-     * nullable}
+     * @return the tailing characters after entering a placeholder,
+     * {@code nullable}
      */
     public String getClosing() {
         return closing;

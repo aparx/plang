@@ -34,7 +34,7 @@ public class UserExample {
         lexicon.set(Placeholder.of("address.number", addr -> addr.number, Address.class));
 
         //Now we load some example messages
-        MessageRegistry messages = language.getContent();
+        MessageRegistry messages = language.getRegister();
         messages.set("user-welcome", "Welcome {user.name} to this example!");
         messages.set("user-full", "{user.name} full address: {user.address}");
         messages.set("user-near", "{user.name} lives in {address.country} near {address.postcode}");

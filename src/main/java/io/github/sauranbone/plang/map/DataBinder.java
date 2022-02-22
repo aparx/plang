@@ -34,12 +34,13 @@ public interface DataBinder {
      *                    to
      * @param value       the target value that is assigned to the given
      *                    {@code placeholder}
+     * @return this instance to enable method chaining
      * @throws NullPointerException if {@code placeholder} is null
      * @see #computeKey(Object)
      * @see #bindToObjectKey(Object, Object)
      */
-    default void bind(String placeholder, Object value) {
-        bindToObjectKey(placeholder, value);
+    default DataBindMap bind(String placeholder, Object value) {
+        return bindToObjectKey(placeholder, value);
     }
 
     /**
@@ -147,6 +148,7 @@ public interface DataBinder {
      * @param key   the target object to assign {@code value} to
      * @param value the target value that is assigned to {@code key} as
      *              key
+     * @return this instance to enable method chaining
      * @throws NullPointerException      if {@code key} is null
      * @throws IndexOutOfBoundsException if {@code key} is a number and
      *                                   below zero or above or equal to
@@ -158,7 +160,7 @@ public interface DataBinder {
      * @see #computeKey(Object)
      * @see #isCaseSensitive()
      */
-    void bindToObjectKey(Object key, Object value);
+    DataBindMap bindToObjectKey(Object key, Object value);
 
     /**
      * Binds each element of given {@code values} to their corresponding
@@ -173,11 +175,12 @@ public interface DataBinder {
      * <p>If {@code values} is null or empty, nothing is mutated.
      *
      * @param values the target values to be added,
+     * @return this instance to enable method chaining
      * @throws IndexOutOfBoundsException if the offset index is above the
      *                                   maximum range of integer values
      * @see #bind(int, Object)
      */
-    void push(Object... values);
+    DataBindMap push(Object... values);
 
     /**
      * Unbinds the given {@code key} as key from this binder.

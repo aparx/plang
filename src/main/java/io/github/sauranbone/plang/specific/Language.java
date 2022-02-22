@@ -1,5 +1,7 @@
 package io.github.sauranbone.plang.specific;
 
+import io.github.sauranbone.plang.error.DefaultErrorHandler;
+import io.github.sauranbone.plang.error.LanguageErrorHandler;
 import io.github.sauranbone.plang.parsing.*;
 import io.github.sauranbone.plang.parsing.impl.NormalLexer;
 import io.github.sauranbone.plang.parsing.impl.DefaultParser;
@@ -24,6 +26,7 @@ public class Language implements Serializable {
     private final MessageLexer lexer;
     private final MessageParser parser;
     private final MessageTransformer transformer;
+    private LanguageErrorHandler errorHandler;
 
     MessageRegistry registry;
 
@@ -38,15 +41,20 @@ public class Language implements Serializable {
      * @param lexer        the target lexer that is used
      * @param parser       the target parser that is used
      * @param transformer  the target message transforming utility
+     * @param errorHandler the target language based error handler
      * @throws NullPointerException if any argument is null
      */
-    public Language(String name, String abbreviation, Lexicon lexicon, MessageLexer lexer, MessageParser parser, MessageTransformer transformer) {
+    public Language(String name, String abbreviation, Lexicon lexicon,
+                    MessageLexer lexer, MessageParser parser,
+                    MessageTransformer transformer,
+                    LanguageErrorHandler errorHandler) {
         Objects.requireNonNull(name, "Name");
         Objects.requireNonNull(abbreviation, "Abbreviation");
         Objects.requireNonNull(lexicon, "Lexicon");
         Objects.requireNonNull(lexer, "Lexer");
         Objects.requireNonNull(parser, "Parser");
         Objects.requireNonNull(transformer, "Transformer");
+        Objects.requireNonNull(errorHandler, "Error Handler");
         this.name = name;
         this.abbreviation = abbreviation;
         this.lexicon = lexicon;
@@ -54,6 +62,7 @@ public class Language implements Serializable {
         this.parser = parser;
         this.transformer = transformer;
         this.registry = new MessageRegistry(this);
+        this.errorHandler = errorHandler;
     }
 
     /**
@@ -65,15 +74,17 @@ public class Language implements Serializable {
      * @param lexicon      the lexicon that is used
      * @throws NullPointerException if any argument is null
      * @see #Language(String, String, Lexicon, MessageLexer, MessageParser,
-     * MessageTransformer)
+     * MessageTransformer, LanguageErrorHandler)
      * @see NormalLexer#DEFAULT_LEXER
      * @see DefaultParser#SINGLETON
      * @see DefaultTransformer#SINGLETON
+     * @see DefaultErrorHandler#SINGLETON
      * @see MessageRegistry
      */
     public Language(String name, String abbreviation, Lexicon lexicon) {
         this(name, abbreviation, lexicon, NormalLexer.DEFAULT_LEXER,
-                DefaultParser.SINGLETON, DefaultTransformer.SINGLETON);
+                DefaultParser.SINGLETON, DefaultTransformer.SINGLETON,
+                DefaultErrorHandler.SINGLETON);
     }
 
     /**
@@ -85,11 +96,12 @@ public class Language implements Serializable {
      * @throws NullPointerException if any argument is null
      * @see #Language(String, String, Lexicon)
      * @see #Language(String, String, Lexicon, MessageLexer, MessageParser,
-     * MessageTransformer)
+     * MessageTransformer, LanguageErrorHandler)
      * @see Lexicon
      * @see NormalLexer#DEFAULT_LEXER
      * @see DefaultParser#SINGLETON
      * @see DefaultTransformer#SINGLETON
+     * @see DefaultErrorHandler#SINGLETON
      */
     public Language(String name, String abbreviation) {
         this(name, abbreviation, new Lexicon());
@@ -204,13 +216,34 @@ public class Language implements Serializable {
     }
 
     /**
+     * Returns the language based error handler.
+     *
+     * @return this error handler, {@code not null}
+     */
+    public LanguageErrorHandler getErrorHandler() {
+        return errorHandler;
+    }
+
+    /**
+     * Updates the error handler for this language to the given
+     * {@code errorHandler}.
+     *
+     * @param errorHandler the new error handler, {@code not null}
+     * @throws NullPointerException if {@code errorHandler} is null
+     */
+    public final synchronized void setErrorHandler(LanguageErrorHandler errorHandler) {
+        Objects.requireNonNull(errorHandler);
+        this.errorHandler = errorHandler;
+    }
+
+    /**
      * Returns the messaging registry, containing and keeping all the
      * messages that are accessible in the language's scope.
      *
      * @return the target registry of this language, {@code not null}
      * @throws NullPointerException if this registry is null
      */
-    public synchronized final MessageRegistry getContent() {
+    public synchronized final MessageRegistry getRegister() {
         return Objects.requireNonNull(registry);
     }
 

@@ -1,6 +1,9 @@
 package io.github.sauranbone.plang.parsing.impl;
 
 import io.github.sauranbone.plang.PlangUtils;
+import io.github.sauranbone.plang.error.LanguageErrorHandler;
+import io.github.sauranbone.plang.error.ParseError;
+import io.github.sauranbone.plang.error.ParseErrorType;
 import io.github.sauranbone.plang.map.DataBinder;
 import io.github.sauranbone.plang.parsing.MessageToken;
 import io.github.sauranbone.plang.parsing.MessageTransformer;
@@ -123,8 +126,10 @@ public class DefaultTransformer implements MessageTransformer {
                     }
                 }
                 //TODO Warn that the placeholder is not bound
-//                System.out.println("Placeholder " + val + " not" +
-//                        " bound");
+                //Send warning that target is not contained
+                LanguageErrorHandler errors = language.getErrorHandler();
+                errors.handle(new ParseError(ParseErrorType.WARNING,
+                        "placeholder " + val + " not bound"));
             }
             //Just append the token as literal text
             builder.append(token.getRaw());

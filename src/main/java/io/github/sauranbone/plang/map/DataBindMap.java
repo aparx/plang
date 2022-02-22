@@ -199,12 +199,13 @@ public class DataBindMap extends HashPlangMap<Object, Object> implements DataBin
     }
 
     @Override
-    public void bindToObjectKey(Object key, Object value) {
+    public DataBindMap bindToObjectKey(Object key, Object value) {
         Object obj = computeKey(key);
         if (obj instanceof Integer) {
             evalidx((int) obj, true);
         }
         super.set(obj, value);
+        return this;
     }
 
     private int getNumber(Object v) {
@@ -212,8 +213,9 @@ public class DataBindMap extends HashPlangMap<Object, Object> implements DataBin
     }
 
     @Override
-    public void push(Object... values) {
+    public DataBindMap push(Object... values) {
         arraypush(values, 1 + high);
+        return this;
     }
 
     @Override

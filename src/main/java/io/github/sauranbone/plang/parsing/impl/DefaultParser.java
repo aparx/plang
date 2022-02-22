@@ -1,5 +1,8 @@
 package io.github.sauranbone.plang.parsing.impl;
 
+import io.github.sauranbone.plang.error.LanguageErrorHandler;
+import io.github.sauranbone.plang.error.ParseError;
+import io.github.sauranbone.plang.error.ParseErrorType;
 import io.github.sauranbone.plang.parsing.MessageParser;
 import io.github.sauranbone.plang.parsing.MessageToken;
 import io.github.sauranbone.plang.parsing.ParsedTokens;
@@ -42,8 +45,7 @@ public class DefaultParser implements MessageParser {
         Objects.requireNonNull(language);
         Lexicon lexicon = language.getLexicon();
         Objects.requireNonNull(lexicon, "Lexicon");
-        if (tokens == null || tokens.isEmpty())
-            return new ParsedTokens();
+        if (tokens == null || tokens.isEmpty()) return new ParsedTokens();
         //Create buffer and start validating each token
         final int n = tokens.size();
         ParsedTokens.Builder output = new ParsedTokens.Builder(n);
@@ -56,11 +58,10 @@ public class DefaultParser implements MessageParser {
             //add setting that allows "dynamic placeholder" TODO
             String target = token.getValue();
             if (!lexicon.has(target)) {
-                //Send warning that target is not contained TODO
-                //And set that the variable is not contained in the lexicon
-                //at parse time.
-//                System.out.println("[Warning] placeholder " + target +
-//                        " is a dynamic placeholder.");
+                //Send warning that target is not contained
+                LanguageErrorHandler errors = language.getErrorHandler();
+                errors.handle(new ParseError(ParseErrorType.NOTIFY,
+                        "placeholder " + target + " is dynamic"));
             }
             output.add(token);
         }

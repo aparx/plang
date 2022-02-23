@@ -11,8 +11,8 @@ Maven:
 
 ```xml
 <dependency>
-  <groupId>io.github.sauranbone</groupId>
-  <artifactId>plang</artifactId>
+  <groupId>io.github.sauranbone.plang</groupId>
+  <artifactId>plang-core</artifactId>
   <version>1.0-SNAPSHOT</version>
 </dependency>
 ```
@@ -20,7 +20,7 @@ Maven:
 Gradle:
 
 ```gradle
-require 'io.github.sauranbone:plang:1.0-SNAPSHOT';
+require 'io.github.sauranbone.plang:plang-core:1.0-SNAPSHOT';
 ```
 
 Or by simply downloading the latest released JAR-File.

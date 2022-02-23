@@ -110,16 +110,23 @@ lexicon.set(Placeholder.of("userToString", User.class));
 
 MessageRegistry content = english.getRegistry();
 content.set("age", "{user.name} is {user.age} years old!");
+content.set("lang", "The language of the world is: {worldLanguage}");
+content.set("user", "User instance #toString() is: {userToString}");
 
 //Display the message
 Message message = content.get("age");
 User exampleUser = new User("oceanHuntr3", 43);
-String formatted = message.transform(DataBindMap.types(exampleUser));
+DataBinder data = DataBindMap.types(exampleUser);
+String formatted = message.transform(data);
 System.out.println(formatted);
+System.out.println(content.get("lang").transform());
+System.out.println(content.get("user").transform(data));
 ```
 Output:
 ```console
 oceanHuntr3 is 43 years old!
+The language of the world is: English
+User instance #toString() is: examples.WelcomeUser$User@723279cf
 ```
 
 ## Simple Wikis

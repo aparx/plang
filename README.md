@@ -28,7 +28,7 @@ Or by simply downloading the latest released JAR-File.
 ## Examples and simple documentations
 Below are some examples that showcase good use-cases for when to use Plang.
 
-### Explanation of a simple example
+### Basic explanation
 ```java
 LanguageFactory factory = Plang.getLanguageFactory();
 Language english = factory.getOrCreate("English", "en");
@@ -61,8 +61,31 @@ In the lower paragraph we basically get the message `public-announce` out of the
 content of the english language.<br>
 Then we transform the message using a `DataBinder` named `DataBindMap` that is created
 using `DataBindMap#index(Object[])`, which is replacing the message's placeholders based on their
-position in relation to the index positions of the arguments we pass into allocation method.
+position in relation to the index positions of the arguments we pass into allocation method.<br>
 
+### Direct placeholder binding
+```java
+LanguageFactory factory = Plang.getLanguageFactory();
+Language english = factory.getOrCreate("English", "en");
+MessageRegistry content = english.getRegistry();
+content.set("foo bar", "{Name} is {Age} years old!");
+
+//Display the message
+Message message = content.get("foo bar");
+DataBinder binder = new DataBindMap();
+binder.bind("Name", "Alexander");
+binder.bind("Age", 38);
+String formatted = message.transform(binder);
+System.out.println(formatted);
+```
+Output:
+```console
+Alexander is 38 years old!
+```
+In this example, that is pretty equal to the last example - that explains the basics, we create
+a message template and create a `DataBinder` which binds certain placeholder names.
+This means, that the literal placeholders within the given message `Name` and `Age` are replaced
+by the values we associate to within the data binder.
 
 ## Simple Wikis
 A more advanced tutorial and explanation can be found in this wikis.

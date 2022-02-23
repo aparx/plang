@@ -25,6 +25,23 @@ require 'io.github.sauranbone.plang:plang-core:1.0-SNAPSHOT';
 
 Or by simply downloading the latest released JAR-File.
 
+## Examples
+Below are some examples that showcase good use-cases for when to use Plang.
+
+### Simple Welcome Message
+```java
+        LanguageFactory factory = Plang.getLanguageFactory();
+        Language english = factory.getOrCreate("English", "en");
+        MessageRegistry content = english.getRegistry();
+        content.set("public-announce", "Welcome {Name} to our chat!");
+
+        //Display the message
+        Message message = content.get("public-announce");
+        String formatted = message.transform(DataBindMap.index("Vinzent"));
+        System.out.println(formatted);
+```
+
+
 ## Simple Wikis
 A more advanced tutorial and explanation can be found in this wikis.
 

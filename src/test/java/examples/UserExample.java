@@ -1,12 +1,12 @@
 package examples;
 
-import io.github.sauranbone.plang.map.DataBindMap;
-import io.github.sauranbone.plang.map.DataBinder;
-import io.github.sauranbone.plang.placeholder.Placeholder;
-import io.github.sauranbone.plang.specific.Language;
-import io.github.sauranbone.plang.specific.Lexicon;
-import io.github.sauranbone.plang.specific.Message;
-import io.github.sauranbone.plang.specific.MessageRegistry;
+import io.github.sauranbone.plang.core.map.DataBindMap;
+import io.github.sauranbone.plang.core.map.DataBinder;
+import io.github.sauranbone.plang.core.placeholder.Placeholder;
+import io.github.sauranbone.plang.core.specific.Language;
+import io.github.sauranbone.plang.core.specific.Lexicon;
+import io.github.sauranbone.plang.core.specific.Message;
+import io.github.sauranbone.plang.core.specific.MessageRegistry;
 
 /**
  * @author Vinzent Zeband
@@ -25,13 +25,6 @@ public class UserExample {
         lexicon.set(Placeholder.of("1+1", 2));
 
         //The following placeholders are dynamic
-        lexicon.set(Placeholder.of("user.name", user -> user.username, User.class));
-        lexicon.set(Placeholder.of("user.address", user -> user.address.getFullAddress(), User.class));
-        lexicon.set(Placeholder.of("address.country", addr -> addr.country, Address.class));
-        lexicon.set(Placeholder.of("address.city", addr -> addr.city, Address.class));
-        lexicon.set(Placeholder.of("address.postcode", addr -> addr.postcode, Address.class));
-        lexicon.set(Placeholder.of("address.address", addr -> addr.address, Address.class));
-        lexicon.set(Placeholder.of("address.number", addr -> addr.number, Address.class));
 
         //Now we load some example messages
         MessageRegistry messages = language.getRegister();

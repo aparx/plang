@@ -41,6 +41,11 @@ String formatted = message.transform(DataBindMap.index("Vinzent"));
 System.out.println(formatted);
 ```
 
+Output:
+```console
+Welcome Vinzent to our chat!
+```
+
 There is a lot going on, beginning with the `LanguageFactory`. <br>
 The factory is essentially a cache and allocation system for languages,
 so that you do not have to worry about creating one or multiple languages and 
@@ -52,7 +57,11 @@ The `MessageRegistry` is just a container for messages that are only bindable an
 to the language the registry is assigned to. The registry is allocated automatically
 within the default language constructor, that is done, whenever "English" is yet not
 cached and thus created.<br><br>
-
+In the lower paragraph we basically get the message `public-announce` out of the message
+content of the english language.<br>
+Then we transform the message using a `DataBinder` named `DataBindMap` that is created
+using `DataBindMap#index(Object[])`, which is replacing the message's placeholders based on their
+position in relation to the index positions of the arguments we pass into allocation method.
 
 
 ## Simple Wikis

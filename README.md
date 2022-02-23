@@ -28,7 +28,7 @@ Or by simply downloading the latest released JAR-File.
 ## Examples and simple documentations
 Below are some examples that showcase good use-cases for when to use Plang.
 
-### Basic explanation
+### Dynamic placeholder and basic explanation
 ```java
 LanguageFactory factory = Plang.getLanguageFactory();
 Language english = factory.getOrCreate("English", "en");
@@ -85,7 +85,35 @@ Alexander is 38 years old!
 In this example, that is pretty equal to the last example - that explains the basics, we create
 a message template and create a `DataBinder` which binds certain placeholder names.
 This means, that the literal placeholders within the given message `Name` and `Age` are replaced
-by the values we associate to within the data binder.
+by the values we associate them to within the data binder.
+
+### Global placeholder binding
+In the examples above only a fraction is showcased what plang is capable of, another strong capability
+of plang is the global placeholder binding, so you do not need to worry about binding placeholders
+dynamically when you transform a message every time.<br>
+When we talk about global placeholder binding, we mean a placeholder `Lexicon`, that can be assigned to
+multiple languages at the same time. When using the Language Factory, we can simply append the lexicon
+to the end of `LanguageFactory#getOrCreate(String, String, Lexicon)`:<br>
+```java
+Lexicon lexicon = new Lexicon();
+LanguageFactory factory = Plang.getLanguageFactory();
+Language english = factory.getOrCreate("English", "en", lexicon);
+lexicon.set(Placeholder.of("user.name", User.class, user -> user.name));
+lexicon.set(Placeholder.of("user.age", User.class, user -> user.age));
+
+MessageRegistry content = english.getRegistry();
+content.set("age", "{user.name} is {user.age} years old!");
+
+//Display the message
+Message message = content.get("age");
+User exampleUser = new User("oceanHuntr3", 43);
+String formatted = message.transform(DataBindMap.types(exampleUser));
+System.out.println(formatted);
+```
+Output:
+```console
+oceanHuntr3 is 43 years old!
+```
 
 ## Simple Wikis
 A more advanced tutorial and explanation can be found in this wikis.

@@ -27,7 +27,7 @@ public class UserExample {
         //The following placeholders are dynamic
 
         //Now we load some example messages
-        MessageRegistry messages = language.getRegister();
+        MessageRegistry messages = language.getRegistry();
         messages.set("user-welcome", "Welcome {user.name} to this example!");
         messages.set("user-full", "{user.name} full address: {user.address}");
         messages.set("user-near", "{user.name} lives in {address.country} near {address.postcode}");

@@ -19,18 +19,19 @@ public class AppletTest {
         lexicon.set(Placeholder.of("userName", User.class, u -> u.name));
         lexicon.set(Placeholder.of("userAge", User.class, u -> u.age));
         lexicon.set(Placeholder.of("prefix", "[Prefix123]"));
-        Language language = factory.getOrBake("English", "en", lexicon);
+        Language language = factory.getOrCreate("English", "en", lexicon);
         language.setErrorHandler(error -> System.out.println(error.getErrorType() + ": " + error.getMessage()));
-        MessageRegistry registry = language.getRegister();
+        MessageRegistry registry = language.getRegistry();
         registry.set("welcome", "{prefix} Hello {userToString} or " +
                 "{userName}, " +
                 "{userAge} to the server!");
-        System.out.println(registry.get("welcome").transform(DataBindMap.index("some bastard")));
+        System.out.println(registry.get("welcome")
+                .transform(DataBindMap.index("some bastard")));
 
         Language en = factory.getByAbbreviation("en");
         DataBindMap map = new DataBindMap();
         map.bindType(new User("vincent", 18));
-        System.out.println(en.getRegister().get("welcome").transform(map));
+        System.out.println(en.getRegistry().get("welcome").transform(map));
 
 //        Lexicon lexicon = new Lexicon();
 //        lexicon.set(Placeholder.of("test", "asd"));

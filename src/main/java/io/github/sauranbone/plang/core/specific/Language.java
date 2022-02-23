@@ -28,7 +28,7 @@ public class Language implements Serializable {
     private final MessageTransformer transformer;
     private LanguageErrorHandler errorHandler;
 
-    MessageRegistry registry;
+    private MessageRegistry registry;
 
     /**
      * Allocates a new language having an entire {@code name}, an
@@ -44,10 +44,7 @@ public class Language implements Serializable {
      * @param errorHandler the target language based error handler
      * @throws NullPointerException if any argument is null
      */
-    public Language(String name, String abbreviation, Lexicon lexicon,
-                    MessageLexer lexer, MessageParser parser,
-                    MessageTransformer transformer,
-                    LanguageErrorHandler errorHandler) {
+    public Language(String name, String abbreviation, Lexicon lexicon, MessageLexer lexer, MessageParser parser, MessageTransformer transformer, LanguageErrorHandler errorHandler) {
         Objects.requireNonNull(name, "Name");
         Objects.requireNonNull(abbreviation, "Abbreviation");
         Objects.requireNonNull(lexicon, "Lexicon");
@@ -82,9 +79,7 @@ public class Language implements Serializable {
      * @see MessageRegistry
      */
     public Language(String name, String abbreviation, Lexicon lexicon) {
-        this(name, abbreviation, lexicon, NormalLexer.DEFAULT_LEXER,
-                DefaultParser.SINGLETON, DefaultTransformer.SINGLETON,
-                DefaultErrorHandler.SINGLETON);
+        this(name, abbreviation, lexicon, NormalLexer.DEFAULT_LEXER, DefaultParser.SINGLETON, DefaultTransformer.SINGLETON, DefaultErrorHandler.SINGLETON);
     }
 
     /**
@@ -243,7 +238,7 @@ public class Language implements Serializable {
      * @return the target registry of this language, {@code not null}
      * @throws NullPointerException if this registry is null
      */
-    public synchronized final MessageRegistry getRegister() {
+    public synchronized final MessageRegistry getRegistry() {
         return Objects.requireNonNull(registry);
     }
 
@@ -276,7 +271,44 @@ public class Language implements Serializable {
      */
     public boolean isEqual(Language language) {
         if (language == null) return false;
-        return getIdentifier().equals(language.getIdentifier());
+        return isEqualIdentifier(language.getIdentifier());
+    }
+
+    /**
+     * Returns true if the given {@code identifier} is equal to this
+     * identifier.
+     *
+     * @param identifier the target identifier to be matched
+     * @return false if {@code identifier} is null or not equal to this
+     * identifier
+     */
+    public boolean isEqualIdentifier(String identifier) {
+        if (identifier == null) return false;
+        return getIdentifier().equals(identifier);
+    }
+
+    /**
+     * Returns true if the given {@code name} is equal to this name.
+     *
+     * @param name the target name to be matched
+     * @return false if {@code name} is null or is not equal to this name
+     */
+    public boolean isEqualName(String name) {
+        if (name == null) return false;
+        return getName().equals(name);
+    }
+
+    /**
+     * Returns true if the given {@code abbreviation} is equal to this
+     * abbreviation.
+     *
+     * @param abbreviation the target abbreviation to be matched
+     * @return false if {@code abbreviation} is null or is not equal to
+     * this abbreviation
+     */
+    public boolean isEqualAbbreviation(String abbreviation) {
+        if (abbreviation == null) return false;
+        return getAbbreviation().equals(abbreviation);
     }
 
     @Override

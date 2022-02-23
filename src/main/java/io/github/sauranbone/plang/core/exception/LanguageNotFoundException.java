@@ -36,4 +36,9 @@ public class LanguageNotFoundException extends RuntimeException {
         return new LanguageNotFoundException("Cannot find language with " +
                 "name \"" + name + "\"");
     }
+
+    public static LanguageNotFoundException byId(String identifier) {
+        return new LanguageNotFoundException("Cannot find language with " +
+                "identifier \"" + identifier + "\" (case sensitive?)");
+    }
 }

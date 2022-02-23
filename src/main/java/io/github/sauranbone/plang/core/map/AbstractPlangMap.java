@@ -128,11 +128,11 @@ public abstract class AbstractPlangMap<K, V> {
      * this map and returns the bound value of the {@code key} that got
      * removed.
      *
-     * @param key the target key to be removed
+     * @param name the target key to be removed
      * @return the bound value of {@code key}, or null if not bound
      */
-    protected synchronized V remove(K key) {
-        return map.remove(key);
+    protected synchronized V remove(K name) {
+        return map.remove(name);
     }
 
     /**

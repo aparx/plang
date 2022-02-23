@@ -25,21 +25,34 @@ require 'io.github.sauranbone.plang:plang-core:1.0-SNAPSHOT';
 
 Or by simply downloading the latest released JAR-File.
 
-## Examples
+## Examples and simple documentations
 Below are some examples that showcase good use-cases for when to use Plang.
 
-### Simple Welcome Message
+### Explanation of a simple example
 ```java
-        LanguageFactory factory = Plang.getLanguageFactory();
-        Language english = factory.getOrCreate("English", "en");
-        MessageRegistry content = english.getRegistry();
-        content.set("public-announce", "Welcome {Name} to our chat!");
+LanguageFactory factory = Plang.getLanguageFactory();
+Language english = factory.getOrCreate("English", "en");
+MessageRegistry content = english.getRegistry();
+content.set("public-announce", "Welcome {Name} to our chat!");
 
-        //Display the message
-        Message message = content.get("public-announce");
-        String formatted = message.transform(DataBindMap.index("Vinzent"));
-        System.out.println(formatted);
+//Display the message
+Message message = content.get("public-announce");
+String formatted = message.transform(DataBindMap.index("Vinzent"));
+System.out.println(formatted);
 ```
+
+There is a lot going on, beginning with the `LanguageFactory`. <br>
+The factory is essentially a cache and allocation system for languages,
+so that you do not have to worry about creating one or multiple languages and 
+saving them into globally accessible variables. The factory cache will handle
+everything automatically and does safe-proof things to avoid errors or sensitive
+issues to happen.<br>
+<br>
+The `MessageRegistry` is just a container for messages that are only bindable and bound
+to the language the registry is assigned to. The registry is allocated automatically
+within the default language constructor, that is done, whenever "English" is yet not
+cached and thus created.<br><br>
+
 
 
 ## Simple Wikis

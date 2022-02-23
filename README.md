@@ -98,8 +98,15 @@ to the end of `LanguageFactory#getOrCreate(String, String, Lexicon)`:<br>
 Lexicon lexicon = new Lexicon();
 LanguageFactory factory = Plang.getLanguageFactory();
 Language english = factory.getOrCreate("English", "en", lexicon);
+//Bind dynamic placeholders into the global lexicon
 lexicon.set(Placeholder.of("user.name", User.class, user -> user.name));
 lexicon.set(Placeholder.of("user.age", User.class, user -> user.age));
+
+//Bind a static placeholder into the global lexicon
+lexicon.set(Placeholder.of("worldLanguage", "English"));
+
+//Bind a type to the global lexicon which #toString() is used
+lexicon.set(Placeholder.of("userToString", User.class));
 
 MessageRegistry content = english.getRegistry();
 content.set("age", "{user.name} is {user.age} years old!");

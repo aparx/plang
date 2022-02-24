@@ -42,7 +42,7 @@ System.out.println(formatted);
 ```
 
 Output:
-```console
+```
 Welcome Vinzent to our chat!
 ```
 
@@ -79,7 +79,7 @@ String formatted = message.transform(binder);
 System.out.println(formatted);
 ```
 Output:
-```console
+```
 Alexander is 38 years old!
 ```
 In this example, that is pretty equal to the last example - that explains the basics, we create
@@ -117,33 +117,19 @@ content.set("user", "User instance #toString() is: {userToString}");
 Message message = content.get("age");
 User exampleUser = new User("oceanHuntr3", 43);
 DataBinder data = DataBindMap.types(exampleUser);
-String formatted = message.transform(data);
-System.out.println(formatted);
+System.out.println(message.transform(data));
 System.out.println(content.get("lang").transform());
 System.out.println(content.get("user").transform(data));
 ```
 Output:
-```console
+```
 oceanHuntr3 is 43 years old!
 The language of the world is: English
 User instance #toString() is: examples.WelcomeUser$User@723279cf
 ```
 
-## Simple Wikis
-A more advanced tutorial and explanation can be found in this wikis.
-
-### Basics
-The Plang library is essentially parted into different pieces, each describing a certain task
-or container that contains utilities and attributes that describe that object.
-
-#### Placeholder
-A placeholder essentially is like a variable name, that is replaced with the variable content
-whenever a message is parsed using given data input (DataBinder).
-A placeholder can be identified and used in many ways, but the most popular is within a message
-content and a specific syntax that indicates a piece of literal text to be a placeholder, that is 
-set within the corresponding message lexer.
-The placeholder class is **not** representing a literal token within literal text as you might think,
-so a placeholder instance is not representing placeholder name token, but rather the direct content
-for a later translation from a literal placeholder to content.
-
-
+In the example above we use the basics that were explained further above and implement a new way
+of binding placeholders, which is now global. This means that every language that is sharing the
+same lexicon reference will have the same globally accessible placeholders.<br>
+There are different types of global placeholders:
+- **Dynamic**<br>The dynamic placeholder is accepting a certain class type (here `User.class`), which is determining whenever the placeholder's transformer's (our lambda `user -> user.name` or `user -> user.age`) method should be invoked. The invocation of the transformer is done, whenever a `DataBinder` is a superclass or an equal class of the determined class type (here `User.class`). An example would be the binding through `DataBinder.bindType(...)` or `DataBindMap.types(...)`, which's values are scanned and their top superclass, that is *not* of type *Object*, is used as the comparison type to check if the class is matching any of the dynamic placeholder types.

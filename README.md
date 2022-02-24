@@ -25,7 +25,7 @@ require 'io.github.sauranbone.plang:plang-core:1.0-SNAPSHOT';
 
 Or by simply downloading the latest released JAR-File.
 
-## Examples and simple documentations
+## Examples and basic explanations
 Below are some examples that showcase good use-cases for when to use Plang.
 
 ### Dynamic placeholder and basic explanation

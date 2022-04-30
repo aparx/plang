@@ -1,7 +1,7 @@
 # plang
 High performant and advanced localisation and multilingual lexical analysis Java library to modify, cache, use and replace global or local placeholders, variables and parameters in preset or dynamic messages.
 
-This library is in beta, thorough documentations and wiki is coming with the next update.
+**This library is in beta, thorough documentations and wiki is coming with the next update.**
 
 ## Documentation
 More information about this project is listed below. Javadocs can be browsed here.

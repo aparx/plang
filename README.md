@@ -3,6 +3,8 @@ High performant and advanced localisation and multilingual lexical analysis Java
 
 **This library is in beta, thorough documentations and wiki is coming with the first release.**
 
+[![javadocs](https://javadoc.io/badge2/io.github.sauranbone/plang/javadoc.svg)](https://javadoc.io/doc/io.github.sauranbone/plang)
+
 ## Documentation
 More information about this project is listed below. Javadocs can be browsed here.
 

@@ -5,8 +5,8 @@ import org.apache.commons.lang3.Validate;
 import java.util.Objects;
 
 /**
- * Default language error handling implementation, that redirects any
- * handle into the default system output stream, so the console.
+ * Default language error handling implementation that can be used to be
+ * extended to create custom error solutions using existing validation.
  *
  * @author Vinzent Zeband
  * @version 00:30 CET, 23.02.2022
@@ -22,10 +22,6 @@ public class DefaultErrorHandler implements LanguageErrorHandler {
 
     /**
      * {@inheritDoc}
-     * <p>This implementation is simply redirecting any warning into the
-     * output stream which type is not breaking the current progression. If
-     * the given {@code error} type is breaking the current flow, an
-     * unchecked exception is thrown.
      *
      * @param error the target error to be logged
      * @throws RuntimeException     if {@code error} is a breaking type
@@ -37,7 +33,6 @@ public class DefaultErrorHandler implements LanguageErrorHandler {
         final ParseErrorType type = error.getErrorType();
         final String message = error.getMessage();
         Validate.isTrue(type != null && !type.isBreaking(), message);
-        System.out.println(type + ": " + message);
     }
 
 }

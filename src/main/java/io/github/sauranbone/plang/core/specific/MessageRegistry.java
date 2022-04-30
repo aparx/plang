@@ -183,4 +183,8 @@ public class MessageRegistry extends HashPlangMap<String, Message> implements Se
                         "\")");
     }
 
+    @Override
+    public synchronized Map<String, Message> getMap() {
+        return super.getMap();
+    }
 }

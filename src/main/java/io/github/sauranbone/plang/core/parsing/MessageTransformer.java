@@ -18,9 +18,9 @@ public interface MessageTransformer {
      * transform them, or to overwrite placeholders that are globally
      * accessible in this language's lexicon.  It acts like an extra layer
      * of potential information that might only be necessary on this
-     * particular message or instance.
+     * particular message or instance.dy
      *
-     * @param tokens   the target already parsed tokens of a message
+     * @param tokens   the target alrea parsed tokens of a message
      * @param language the target language that should be converted into
      * @param message  the target message that is transformed
      * @param data     the target binding information

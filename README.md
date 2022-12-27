@@ -1,3 +1,5 @@
+# This project is deprecated
+
 # plang
 High performant and advanced localisation and multilingual lexical analysis Java library to modify, cache, use and replace global or local placeholders, variables and parameters in preset or dynamic messages.
 
